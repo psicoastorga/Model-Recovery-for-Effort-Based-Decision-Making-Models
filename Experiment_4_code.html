@@ -1,0 +1,3170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>All Problems -- Time Based </title>
+    <!-- jspsych plugins -->
+    <script src="jspsych-6.3.1/jspsych.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-audio-keyboard-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-image-button-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-fullscreen.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-html-slider-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-survey-multi-choice.js"></script>
+    <!-- Fonts and CSS -->
+    <link href='https://fonts.googleapis.com/css?family=Bowlby One SC' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="jspsych-6.3.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+</head>
+<style>
+div.a {
+  font-size: 30px;
+}
+</style>
+<body>
+  <!-- Link to jquery and Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+  <script>
+
+  // Initialise some variables
+  let timeline = [];
+  let trialNumber = 0;
+  var PID = (Math.floor(Math.random() * 899999) + 100000).toString();
+  var filename = "NumBackGram_TimeBased_" + PID;
+  var compCode = "5606F4B4" //fill in when setting up Prolific experiment
+
+  //Ensuring there is a PID column  
+  jsPsych.data.addProperties({
+        PID: PID,
+  });
+ 
+  //Prompt before refreshing window
+  window.onbeforeunload = function(){
+
+return "Are you sure you want to leave the experiment?";
+
+};
+
+//Make Experiment full screen
+timeline.push({
+  type: 'fullscreen',
+  fullscreen_mode: true
+});
+
+
+// Demographic information 
+
+ var prolificID = {
+   type: 'survey-text',
+   questions: [{prompt: "What is your Prolific ID?", placeholder: "12345", required: true}],
+ }
+
+ var onlineInPerson = {
+   type: 'survey-multi-choice',
+   questions: [{prompt: "Are you completing this experiment in the lab or online at home?", options: ["Lab", "Online"], required: true}],
+ };
+
+ var age = {
+    type: 'survey-text',
+    questions: [{prompt: "Please enter your age", placeholder: "e.g., 21", required: true}],
+  };
+
+  var gender = {
+    type: "survey-multi-choice",
+    questions: [{prompt: "Please indicate your gender", options: ["Female", "Male", "Non-Binary", "Other", "I prefer not to answer"], required: true}],
+  };
+
+  timeline.push(prolificID, age, gender);
+ 
+//Pre load images 
+easyImages = [
+    './sequenceImages/Easy03_6.png',
+    './sequenceImages/Easy04_10.png',
+    './sequenceImages/Easy05_12.png',
+    './sequenceImages/Easy06_30.png',
+    './sequenceImages/Easy10_60.png',
+    './sequenceImages/Easy11_15.png',
+    './sequenceImages/Easy12_28.png',
+    './sequenceImages/Easy13_11.png',
+    './sequenceImages/Easy14_4.png',
+    './sequenceImages/Easy15_10.png',
+    './sequenceImages/Easy17_27.png',
+    './sequenceImages/Easy18_15.png',
+    './sequenceImages/Easy19_10.png',
+    './sequenceImages/Easy20_7.png',
+    './sequenceImages/Easy21_3.png',
+    './sequenceImages/Easy22_6.png',
+    './sequenceImages/Easy23_4.png',
+    './sequenceImages/Easy24_15.png',
+    './sequenceImages/Easy25_7.png',
+    './sequenceImages/Easy26_50.png',
+    './sequenceImages/Easy27_22.png',
+    './sequenceImages/Easy28_22.png',
+    './sequenceImages/Easy29_50.png',
+    './sequenceImages/Easy30_10.png',
+    './sequenceImages/Easy31_10.png',
+    './sequenceImages/Easy32_2.png',
+    './sequenceImages/Easy33_15.png',
+    './sequenceImages/Easy34_20.png',
+    './sequenceImages/Easy35_5.png',
+    './sequenceImages/Easy36_15.png',
+    './sequenceImages/Easy37_18.png',
+    './sequenceImages/Easy38_18.png',
+    './sequenceImages/Easy39_29.png',
+    './sequenceImages/Easy40_35.png',
+    './sequenceImages/Easy41_52.png',
+    './sequenceImages/Easy42_5.png',
+    './sequenceImages/Easy43_3.png',
+    './sequenceImages/Easy44_15.png',
+    './sequenceImages/Easy45_14.png',
+    './sequenceImages/Easy46_3.png',
+    './sequenceImages/Easy47_5.png',
+    './sequenceImages/Easy48_1.png',
+    './sequenceImages/Easy49_5.png',
+    './sequenceImages/Easy50_21.png',
+    './sequenceImages/Easy51_17.png',
+    './sequenceImages/Easy52_31.png',
+    './sequenceImages/Easy53_33.png',
+    './sequenceImages/Easy54_57.png',
+    './sequenceImages/Easy55_1.png',
+    './sequenceImages/Easy56_45.png',
+    './sequenceImages/Easy57_1.png',
+    './sequenceImages/Easy58_5.png',
+    './sequenceImages/Easy59_12.png',
+    './sequenceImages/Easy60_25.png',
+    './sequenceImages/Easy61_13.png',
+    './sequenceImages/Easy62_22.png',
+    './sequenceImages/Easy63_25.png',
+    './sequenceImages/Easy64_21.png',
+    './sequenceImages/Easy65_25.png',
+    './sequenceImages/Easy66_55.png',
+];
+
+medImages = [
+    './sequenceImages/Medi03_15.png',
+    './sequenceImages/Medi05_34.png',
+    './sequenceImages/Medi06_63.png',
+    './sequenceImages/Medi08_67.png',
+    './sequenceImages/Medi10_243.png',
+    './sequenceImages/Medi13_486.png',
+    './sequenceImages/Medi14_95.png',
+    './sequenceImages/Medi15_97.png',
+    './sequenceImages/Medi20_81.png',
+    './sequenceImages/Medi21_22.png',
+    './sequenceImages/Medi22_12.png',
+    './sequenceImages/Medi23_158.png',
+    './sequenceImages/Medi24_26.png',
+    './sequenceImages/Medi25_207.png',
+    './sequenceImages/Medi26_17.png',
+    './sequenceImages/Medi27_129.png',
+    './sequenceImages/Medi28_38.png',
+    './sequenceImages/Medi29_162.png',
+    './sequenceImages/Medi30_5.png',
+    './sequenceImages/Medi31_11.png',
+    './sequenceImages/Medi32_19.png',
+    './sequenceImages/Medi33_50.png',
+    './sequenceImages/Medi34_52.png',
+    './sequenceImages/Medi35_10.png',
+];
+
+
+
+
+var easyAnagrams = [
+        {
+            Difficulty: "Easy",
+            Scramble: "GEA",
+            Solution: "AGE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BGI",
+            Solution: "BIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UGB",
+            Solution: "BUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YDA",
+            Solution: "DAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GGE",
+            Solution: "EGG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "CEI",
+            Solution: "ICE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "JWA",
+            Solution: "JAW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YKE",
+            Solution: "KEY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GLO",
+            Solution: "LOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PMA",
+            Solution: "MAP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NDO",
+            Solution: "NOD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "APW",
+            Solution: "PAW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ESW",
+            Solution: "SEW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ONS",
+            Solution: "SON"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XAT",
+            Solution: "TAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TVE",
+            Solution: "VET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BWE",
+            Solution: "WEB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YSE",
+            Solution: "YES"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OZO",
+            Solution: "ZOO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XWA",
+            Solution: "WAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OET",
+            Solution: "TOE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "KYS",
+            Solution: "SKY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ETS",
+            Solution: "SET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XSI",
+            Solution: "SIX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ADS",
+            Solution: "SAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ORD",
+            Solution: "ROD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "POR",
+            Solution: "PRO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IGP",
+            Solution: "PIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NRA",
+            Solution: "RAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YPL",
+            Solution: "PLY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EGP",
+            Solution: "PEG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ODP",
+            Solution: "POD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TPE",
+            Solution: "PET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LOI",
+            Solution: "OIL"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DDO",
+            Solution: "ODD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UMD",
+            Solution: "MUD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EWN",
+            Solution: "NEW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XMA",
+            Solution: "MAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ALB",
+            Solution: "LAB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OJG",
+            Solution: "JOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ONI",
+            Solution: "ION"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "THU",
+            Solution: "HUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GHU",
+            Solution: "HUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EMH",
+            Solution: "HEM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RFY",
+            Solution: "FRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GOF",
+            Solution: "FOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IFT",
+            Solution: "FIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IHT",
+            Solution: "HIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ADT",
+            Solution: "TAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OKW",
+            Solution: "WOK"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ETJ",
+            Solution: "JET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GUD",
+            Solution: "DUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ESE",
+            Solution: "SEE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LYA",
+            Solution: "LAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OXB",
+            Solution: "BOX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AJB",
+            Solution: "JAB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LFY",
+            Solution: "FLY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EBE",
+            Solution: "BEE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "INW",
+            Solution: "WIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ANF",
+            Solution: "FAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EMT",
+            Solution: "MET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OGC",
+            Solution: "COG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UOY",
+            Solution: "YOU"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "INF",
+            Solution: "FIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TOU",
+            Solution: "OUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OWC",
+            Solution: "COW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XIM",
+            Solution: "MIX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IPZ",
+            Solution: "ZIP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MYG",
+            Solution: "GYM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "HWY",
+            Solution: "WHY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YUB",
+            Solution: "BUY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UMH",
+            Solution: "HUM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "VIY",
+            Solution: "IVY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BOM",
+            Solution: "MOB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LUF",
+            Solution: "FLU"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MEU",
+            Solution: "EMU"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UEH",
+            Solution: "HUE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ILD",
+            Solution: "LID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "URT",
+            Solution: "RUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IRD",
+            Solution: "RID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OBT",
+            Solution: "BOT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "FLE",
+            Solution: "ELF"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ADF",
+            Solution: "FAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OGH",
+            Solution: "HOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ENP",
+            Solution: "PEN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AGB",
+            Solution: "BAG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IRM",
+            Solution: "RIM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RIS",
+            Solution: "SIR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OWV",
+            Solution: "VOW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TWE",
+            Solution: "WET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RYT",
+            Solution: "TRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TWI",
+            Solution: "WIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GIW",
+            Solution: "WIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ORT",
+            Solution: "ROT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NSU",
+            Solution: "SUN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MUS",
+            Solution: "SUM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YSO",
+            Solution: "SOY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LSY",
+            Solution: "SLY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AST",
+            Solution: "SAT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UGR",
+            Solution: "RUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YRA",
+            Solution: "RAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BUP",
+            Solution: "PUB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EIP",
+            Solution: "PIE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "APY",
+            Solution: "PAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DPA",
+            Solution: "PAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "URO",
+            Solution: "OUR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LOD",
+            Solution: "OLD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AKO",
+            Solution: "OAK"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XFI",
+            Solution: "FIX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ENM",
+            Solution: "MEN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NMA",
+            Solution: "MAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "WLO",
+            Solution: "LOW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RAJ",
+            Solution: "JAR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NIN",
+            Solution: "INN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OTH",
+            Solution: "HOT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LLI",
+            Solution: "ILL"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "CIY",
+            Solution: "ICY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BHU",
+            Solution: "HUB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OHP",
+            Solution: "HOP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "REH",
+            Solution: "HER"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IMH",
+            Solution: "HIM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DHI",
+            Solution: "HID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YHA",
+            Solution: "HAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YGU",
+            Solution: "GUY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MHA",
+            Solution: "HAM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NGI",
+            Solution: "GIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PAG",
+            Solution: "GAP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UFN",
+            Solution: "FUN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UFR",
+            Solution: "FUR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OXF",
+            Solution: "FOX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EFO",
+            Solution: "FOE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DFE",
+            Solution: "FED"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XAF",
+            Solution: "FAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ARF",
+            Solution: "FAR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TAF",
+            Solution: "FAT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "VEE",
+            Solution: "EVE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OEG",
+            Solution: "EGO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DEY",
+            Solution: "DYE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ODU",
+            Solution: "DUO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RDY",
+            Solution: "DRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EDU",
+            Solution: "DUE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PDI",
+            Solution: "DIP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DGI",
+            Solution: "DIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UCT",
+            Solution: "CUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PCU",
+            Solution: "CUP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RCY",
+            Solution: "CRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OYC",
+            Solution: "COY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TOC",
+            Solution: "COT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OCP",
+            Solution: "COP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NCO",
+            Solution: "CON"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "APC",
+            Solution: "CAP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NCA",
+            Solution: "CAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EYB",
+            Solution: "BYE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UNB",
+            Solution: "BUN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YBO",
+            Solution: "BOY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TIB",
+            Solution: "BIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OBG",
+            Solution: "BOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "WBO",
+            Solution: "BOW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NIB",
+            Solution: "BIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DIB",
+            Solution: "BID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ETB",
+            Solution: "BET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GEB",
+            Solution: "BEG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AYB",
+            Solution: "BAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DBE",
+            Solution: "BED"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ARB",
+            Solution: "BAR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EAX",
+            Solution: "AXE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AEW",
+            Solution: "AWE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "SKA",
+            Solution: "ASK"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RIA",
+            Solution: "AIR"
+        }
+
+    ]
+
+    var mediumAnagrams = [
+        {
+            Difficulty: "Medium",
+            Scramble: "RIBHT",
+            Solution: "BIRTH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ALBEK",
+            Solution: "BLEAK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MECLA",
+            Solution: "CAMEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EHCKE",
+            Solution: "CHEEK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ARICH",
+            Solution: "CHAIR"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EOTMC",
+            Solution: "COMET"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "XETDO",
+            Solution: "DETOX"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RADTF",
+            Solution: "DRAFT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MUSRD",
+            Solution: "DRUMS"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CEJTE",
+            Solution: "EJECT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RYTEN",
+            Solution: "ENTRY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "BMEDE",
+            Solution: "EMBED"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HCITE",
+            Solution: "ETHIC"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CTAEX",
+            Solution: "EXACT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ETFCA",
+            Solution: "FACET"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "TAHIF",
+            Solution: "FAITH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NEGFI",
+            Solution: "FEIGN"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CETFH",
+            Solution: "FETCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LFEMA",
+            Solution: "FLAME"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ODFOL",
+            Solution: "FLOOD"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EHRSF",
+            Solution: "FRESH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KOGCE",
+            Solution: "GECKO"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NDGAL",
+            Solution: "GLAND"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ESOGO",
+            Solution: "GOOSE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ERAGC",
+            Solution: "GRACE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RUPGO",
+            Solution: "GROUP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "IABTH",
+            Solution: "HABIT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ASHRH",
+            Solution: "HARSH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "DREHI",
+            Solution: "HIRED"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "SITHO",
+            Solution: "HOIST"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AERIT",
+            Solution: "IRATE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MEPLI",
+            Solution: "IMPEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NYRIO",
+            Solution: "IRONY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "SUEIS",
+            Solution: "ISSUE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LEJWE",
+            Solution: "JEWEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KEORJ",
+            Solution: "JOKER"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "GUDEJ",
+            Solution: "JUDGE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "IHKAK",
+            Solution: "KHAKI"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EFKNI",
+            Solution: "KNIFE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ELNEK",
+            Solution: "KNEEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AKLAO",
+            Solution: "KOALA"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "OCNKK",
+            Solution: "KNOCK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "WONKN",
+            Solution: "KNOWN"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "YKAAK",
+            Solution: "KAYAK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ELDNA",
+            Solution: "LADEN"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HLACT",
+            Solution: "LATCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ETAHL",
+            Solution: "LATHE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AHUGL",
+            Solution: "LAUGH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ALHCE",
+            Solution: "LEACH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "DVIIL",
+            Solution: "LIVID"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "BOLYB",
+            Solution: "LOBBY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EVRLO",
+            Solution: "LOVER"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LSUTO",
+            Solution: "LOTUS"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RUNLA",
+            Solution: "LUNAR"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CYIRL",
+            Solution: "LYRIC"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AAFMI",
+            Solution: "MAFIA"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MYRAR",
+            Solution: "MARRY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HTAMC",
+            Solution: "MATCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ETAMT",
+            Solution: "MATTE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RYMCE",
+            Solution: "MERCY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UQAKC",
+            Solution: "QUACK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LJYLE",
+            Solution: "JELLY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EOKJS",
+            Solution: "JOKES"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KCHCE",
+            Solution: "CHECK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UIJEC",
+            Solution: "JUICE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HIKCC",
+            Solution: "CHICK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ZOERF",
+            Solution: "FROZE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UQLIL",
+            Solution: "QUILL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "XBONU",
+            Solution: "UNBOX"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RATKC",
+            Solution: "TRACK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MPLUC",
+            Solution: "CLUMP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "OVECI",
+            Solution: "VOICE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "OWWID",
+            Solution: "WIDOW"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LMPCA",
+            Solution: "CLAMP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RUJRO",
+            Solution: "JUROR"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UODNB",
+            Solution: "BOUND"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RPAMC",
+            Solution: "CRAMP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "STUJO",
+            Solution: "JOUST"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CMIOR",
+            Solution: "MICRO"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LUWAF",
+            Solution: "AWFUL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NUCHL",
+            Solution: "LUNCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NKACS",
+            Solution: "SNACK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "SHADN",
+            Solution: "HANDS"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NADYC",
+            Solution: "CANDY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LHICL",
+            Solution: "CHILL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LENWY",
+            Solution: "NEWLY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MHYRE",
+            Solution: "RHYME"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NHTAK",
+            Solution: "THANK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KSCOS",
+            Solution: "SOCKS"
+        }
+    ]
+
+
+
+ 
+
+
+
+// Shuffle For Images
+ var easyImagesShuffle1 = jsPsych.randomization.shuffle(easyImages);
+ var easyImagesShuffle2 = jsPsych.randomization.shuffle(easyImages);
+ var easyImagesShuffle3 = jsPsych.randomization.shuffle(easyImages);
+ var easyImagesShuffle4 = easyImagesShuffle1.concat(easyImagesShuffle2);
+ var easyImagesShuffle = easyImagesShuffle4.concat(easyImagesShuffle3)
+
+ var mediumImagesShuffle1 = jsPsych.randomization.shuffle(medImages);
+ var mediumImagesShuffle2 = jsPsych.randomization.shuffle(medImages);
+ var mediumImagesShuffle = mediumImagesShuffle1.concat(mediumImagesShuffle2)
+
+
+ // Shuffle For Anagrams
+var groupEasy = jsPsych.randomization.shuffle(easyAnagrams)
+groupEasy = groupEasy.concat(jsPsych.randomization.shuffle(easyAnagrams))
+var groupMed = jsPsych.randomization.shuffle(mediumAnagrams)
+groupMed = groupMed.concat(jsPsych.randomization.shuffle(mediumAnagrams))
+
+
+
+// Set Up of N-Back Task
+// Initial variables needed for the n-back task
+var n_back_set = ['Z', 'X', 'C', 'V', 'B', 'N', 'R', 'P', 'T', 'S'];
+var sequence = [];
+var how_many_back = 0;
+var sequence_length = 51; // Change this when running through task
+var sequence_lengthPractice = 10
+var currentLetter = null;
+var a = 0
+
+
+// Random determiner of n-back length
+var nLengthArray1 = [1,3];
+nLengthArray1 = jsPsych.randomization.shuffle(nLengthArray1);
+var nLengthArray2 = [1,3];
+nLengthArray2 = jsPsych.randomization.shuffle(nLengthArray2);
+var nLengthArray = nLengthArray1.concat(nLengthArray2);
+
+var nLengthDeterminer = {
+  type: 'html-button-response',
+  stimulus: function() {
+    sequence = [];
+    if(nLengthArray.length > 0) {
+    how_many_back = nLengthArray[a]
+    }
+    if(how_many_back > 0) {
+    return "The next phase will be a:</br></br>"+
+    '<span style="font-size: 60px;"></br>'+how_many_back+'-back task</br></br></span>'+
+    "Press 'm' if the current letter matches the letter from "+how_many_back+" trials ago.</br></br>"
+    } else if(how_many_back == 0) {
+      return "The next phase will be a:</br></br>"+
+      '<span style="font-size: 60px;"></br>'+how_many_back+'-back task</br></br></span>'+
+      "Press 'm' each time a letter appears on the screen.</br></br>"
+    }
+  },
+  choices: ['Start'],
+  prompt: "",
+  on_finish: function(data) {
+    data.how_many_back = how_many_back;
+    a = a + 1;
+  }
+};
+
+
+ var n_back_trial = {
+      type: 'html-keyboard-response',
+      stimulus: function() {
+        if(how_many_back == 0) {
+          var letter = jsPsych.randomization.sampleWithReplacement(n_back_set, 1)[0]
+        } else {
+          if(sequence.length < how_many_back){
+          var letter = jsPsych.randomization.sampleWithoutReplacement(n_back_set, 1)[0]
+          } else {
+             if(jsPsych.timelineVariable('match', true) == true){
+              var letter = sequence[sequence.length - how_many_back];
+            } else {
+              var possible_letters = jsPsych.randomization.sampleWithoutReplacement(n_back_set, 2);
+              if(possible_letters[0] != sequence[sequence.length - how_many_back]){
+              var letter = possible_letters[0];
+            } else {
+              var letter = possible_letters[1];
+            }
+          }
+        }
+        };
+        sequence.push(letter);
+        currentLetter = letter;
+        return '<span style="font-size: 140px;">'+letter+'</span>'
+      },
+      choices: ['M'],
+      trial_duration: 2000,
+      response_ends_trial: false,
+      post_trial_gap: 1500,
+      data: {
+        phase: 'N-Back',
+        match: jsPsych.timelineVariable('match')
+      },
+      on_finish: function(data){
+        data.trialNumber = trialNumber++;
+        data.how_many_back = how_many_back;
+        data.currentLetter = currentLetter;
+        if(data.match == true){
+          data.correct = (data.response != null)
+        }
+        if(data.match == false){
+          data.correct = (data.response === null)
+        }
+        if(data.correct == true) {
+          nextFeedback = '<span style="font-size: 20px;"><b>correct!</b></span>'
+        }  else {
+          nextFeedback = '<span style="font-size: 20px;"><b>Wrong!</b></span>'
+        };
+        }
+      };
+
+
+    var n_back_trials = [
+      {match: true},
+      {match: false}
+    ]
+
+    
+    // For real task
+    var n_back_sequence = {
+      timeline: [n_back_trial],
+      timeline_variables: n_back_trials,
+      sample: {
+        type: 'with-replacement',
+        size: sequence_length,
+        weights: [1, 2]
+      }
+    };
+
+
+    /* feedback for n-back task performance */
+
+    var oneBack_total = 0
+    var threeBack_total = 0
+    var percentCorrect = 0
+
+    var feedbackPractice = {
+      type: 'html-button-response',
+      stimulus: function(){
+        var test_trials = jsPsych.data.get().filter({phase: 'N-Back'}).last(sequence_lengthPractice-how_many_back);
+        var n_match = test_trials.filter({match: true}).count();
+        var n_nonmatch = test_trials.filter({match: false}).count();
+        var n_correct = test_trials.filter({match: true, correct: true}).count();
+        var false_alarms = test_trials.filter({match: false, correct: false}).count();
+        var difference = n_match - n_correct;
+        percentCorrect = (((n_match+n_nonmatch-difference-false_alarms)/(n_match+n_nonmatch))*100).toFixed(2)
+        var mPressCount = test_trials.filter({response: 'm'}).count();
+
+
+        if(how_many_back > 0) {
+        var html = "<div style='width:800px;'>"+
+          "<p>All done!</p>"+
+          "<p>You correctly identified "+n_correct+" of the "+n_match+" matching items.</p>"+
+          "<p>You incorrectly identified "+false_alarms+" of the "+n_nonmatch+" non-matching items as matches.</p>"+
+          "<p>On average, you got <b>"+percentCorrect+" percent</b> correct.</p>"
+        } else if(how_many_back == 0) {
+          var html = "<div style='width:800px;'>"+
+          "<p>All done!</p>"+
+          "<p>You pressed 'm' on "+mPressCount+" of the total 10 trials.</p>"+
+          "<p>You got <b>"+((mPressCount/10)*100).toFixed(2)+" percent</b> correct.</p>"
+        }
+        
+        return html;
+      },
+      choices: ['Next'],
+    }
+
+    var feedback = {
+      type: 'html-button-response',
+      stimulus: function(){
+        var test_trials = jsPsych.data.get().filter({phase: 'N-Back'}).last(sequence_length-how_many_back);
+        var n_match = test_trials.filter({match: true}).count();
+        var n_nonmatch = test_trials.filter({match: false}).count();
+        var n_correct = test_trials.filter({match: true, correct: true}).count();
+        var false_alarms = test_trials.filter({match: false, correct: false}).count();
+        var difference = n_match - n_correct;
+        percentCorrect = (((n_match+n_nonmatch-difference-false_alarms)/(n_match+n_nonmatch))*100).toFixed(2)
+        var mPressCount = test_trials.filter({response: 'm'}).count();
+
+
+        if(how_many_back > 0) {
+        var html = "<span style='font-size: 40px;'><b>"+how_many_back+"-Back Task</b></br></br></span>"+
+          "<span style='font-size: 22px;'>"+
+          "<p>All done!</p>"+
+          "<p>You correctly identified "+n_correct+" of the "+n_match+" matching items.</p>"+
+          "<p>You incorrectly identified "+false_alarms+" of the "+n_nonmatch+" non-matching items as matches.</p>"+
+          "<p>On average, you got <b>"+percentCorrect+" percent</b> correct.</p>"
+        } else if(how_many_back == 0) {
+          var html = "<span style='font-size: 40px;'><b>1-Back Task</b></br></br></span>"+
+          "<span style='font-size: 22px;'>"+
+          "<p>All done!</p>"+
+          "<p>You pressed 'm' on "+mPressCount+" of the total "+sequence_length+" trials.</p>"+
+          "<p>You got <b>"+((mPressCount/sequence_length)*100).toFixed(2)+" percent</b> correct.</p>"
+        }
+        
+        
+        return html;
+      },
+      choices: ['Next'],
+      on_finish: function(data) {
+        data.phase = "N-Back"
+        data.percentCorrect = percentCorrect;
+        data.how_many_back = how_many_back;
+        if(how_many_back == 1) {
+           oneBack_total = oneBack_total + parseInt(percentCorrect)
+        } else if(how_many_back == 3) {
+          threeBack_total = threeBack_total + parseInt(percentCorrect)
+        }
+      }
+    };
+
+    var nBackRunIntro = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>The next run will consist of <b>N-Back tasks</b>.</p><p>Remember, in a 1-Back task you need to press 'm' on your keyboard when the current letter matches the letter from 1 turn ago.</br>"+
+        "During a 3-back task you need to press 'm' when the current letter matches the letter from 3 turns ago.</p>",
+    choices: ['Next']
+};
+
+// How Effortful N-Back check //
+
+    var nBack_effortCheck = {
+        type: 'html-slider-response',
+        stimulus: function(){
+           return "<span style='font-size: 30px;'><b>"+how_many_back+"-Back Task </b></span></br></br>"+
+            "<span style='font-size: 22px;'><p>How effortful did you find the previous task?"
+        },
+        labels: ["0 </br> Not Effortful", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100</br> Extremely Effortful"],
+        button_label: "Submit",
+        require_movement: true,
+        slider_width: 1000,
+        on_finish: function(data) {
+            data.effortCheck_task = how_many_back,
+            data.effortCheck_response = data.response
+        }
+    };
+
+    // Final Loop
+    var nBackLoop = [nBackRunIntro, nLengthDeterminer, n_back_sequence, nBack_effortCheck, feedback, nLengthDeterminer, n_back_sequence, nBack_effortCheck, feedback]
+
+// Colour shuffle for Anagrams and number sequence tasks //
+
+var colourShuffleAnagrams = jsPsych.randomization.shuffle(["Red","Blue"])
+var colourShuffleNumseq = jsPsych.randomization.shuffle(["Orange","Green"])
+
+
+jsPsych.data.addProperties({
+       colourOrderAnagrams: colourShuffleAnagrams,
+       colourOrderNumseq: colourShuffleNumseq,
+ });
+
+// Randomly select a difficulty
+
+ var anagramDiff1 = ["EASY","MEDIUM"];
+ anagramDiff1 = jsPsych.randomization.shuffle(anagramDiff1);
+
+ var anagramDiff2 = ["EASY","MEDIUM"];
+ anagramDiff2 = jsPsych.randomization.shuffle(anagramDiff2);
+
+ var anagramSelectorArray = anagramDiff1.concat(anagramDiff2);
+
+ var anagramDiffCounter = 0
+
+ var anagramDifficultySelector = anagramSelectorArray[anagramDiffCounter]; 
+
+ 
+// premable with difficulty level
+
+var anagramSeqPreamble = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(anagramDifficultySelector == "EASY") {
+            return "<span style='font-size: 22px;'><p>The next run of anagrams are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Set</b></p>"+
+            "<span style='font-size: 22px;'>Please type your solution in the box in <b>capital letters</b>.</br></br>" 
+        }
+        else if(anagramDifficultySelector == "MEDIUM") {
+          return "<span style='font-size: 22px;'><p>The next run of anagrams are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Set</b></p>"+
+            "<span style='font-size: 22px;'>Please type your solution in the box in <b>capital letters</b>.</br></br>" 
+        }
+    },
+    choices: ['Start']
+};
+
+
+
+//Counter for image/problem to display + correctAnswer variable
+var anagramCountEasy = 0
+var anagramCountMed = 0
+var correctAnswer = null
+var prevAnswer = null
+var blockTrialNumberAnagram = 0
+
+// Setting up variables for timer
+var totalBlockTime = 0;
+var timeLimitReached = false
+
+//Time based Number problem block
+
+var anagramTimeBasedLoop = {
+type: 'survey-text',
+preamble: function() {
+        if(anagramDifficultySelector == "EASY") {
+            return "<p style='font-size: 40px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Set</b></p></br>"+
+            "<span style='font-size: 80px;'></br></br></br><p><b>" + groupEasy[anagramCountEasy].Scramble + "</b></p></br></br></br>"
+        }
+        else if(anagramDifficultySelector == "MEDIUM") {
+            return "<p style='font-size: 40px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Set</b></p></br>"+
+            "<span style='font-size: 80px;'></br></br></br><p><b>" + groupMed[anagramCountMed].Scramble + "</b></p></br></br></br>"
+        }
+    }, 
+questions: [{prompt: "<b>Answer</b>", placeholder: "", required: true}],
+button_label: "Submit",
+post_trial_gap: 1,
+on_finish: function(data) {
+    data.phase = "Anagram"
+    blockTrialNumberAnagram = blockTrialNumberAnagram + 1
+        if(anagramDifficultySelector == "EASY"){
+         correctAnswer = groupEasy[anagramCountEasy].Solution
+         data.problem = groupEasy[anagramCountEasy].Scramble
+         data.difficulty = "Easy"
+         data.setColour = colourShuffleAnagrams[0]
+         anagramCountEasy = anagramCountEasy + 1
+         } else if (anagramDifficultySelector == "MEDIUM") {
+         correctAnswer = groupMed[anagramCountMed].Solution
+         data.problem = groupMed[anagramCountMed].Scramble
+         data.difficulty = "Medium"
+         data.setColour = colourShuffleAnagrams[1]
+         anagramCountMed = anagramCountMed + 1
+         } 
+    Answer = JSON.stringify(data.response)
+    Answer2 = Answer.slice(6,)
+    Answer3 = Answer2.match(/"([^"]+)"/)
+    prevAnswer = Answer3[1]
+    blockTime = data.rt 
+    totalBlockTime = totalBlockTime + blockTime
+    data.answer = prevAnswer
+    data.correctAnswer = correctAnswer
+    if(totalBlockTime < 180000) {
+       timeLimitReached = false
+    } else if (totalBlockTime >= 180000) {
+       timeLimitReached = true
+    }
+    if(prevAnswer == correctAnswer) {
+             data.correct = true
+         } else {
+             data.correct = false
+         } 
+      }
+};
+
+//Feedback after each trial
+var anagramTrialFeedback = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(prevAnswer == correctAnswer) {
+            return "<span style='font-size: 30px;'><b>Correct!</b></br></br>"
+        }
+            else {
+                return "<span style='font-size: 30px;'><b>Wrong!</b></br></br>"
+            }
+    },
+    choices: ["Next"],
+    on_finish: function(data) {
+    }
+};
+
+
+// End of block feedback
+var prevAnagramTrials = null
+var correctAnagrams = null
+var prevGramCount = null
+var percentCorrectAnagrams = null
+
+
+var blockFeedbackAnagram = {
+    type: 'html-button-response',
+    stimulus: function() {
+         prevAnagramTrials = jsPsych.data.get().last(blockTrialNumberAnagram+2);
+         correctAnagrams = prevAnagramTrials.filter({correct: true}).count();
+         prevGramCount = (prevAnagramTrials.count()-2);
+         percentCorrectAnagrams = ((correctAnagrams/prevGramCount)*100).toFixed(2);
+        if(anagramDifficultySelector == "EASY") {
+        return "<p style='font-size: 40px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Set</b></p></br>"+
+            "<span style='font-size: 22px;'><p>All done!</p>"+
+            "<p>You correctly solved "+correctAnagrams+" out of "+prevGramCount+" anagrams in the last set.</p>"+
+            "<p>On average, you got <b>"+percentCorrectAnagrams+" percent</b> correct.</p>"
+        } else if(anagramDifficultySelector == "MEDIUM") {
+        return "<p style='font-size: 40px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Set</b></p></br>"+
+            "<span style='font-size: 22px;'><p>All done!</p>"+
+            "<p>You correctly solved "+correctAnagrams+" out of "+prevGramCount+" anagrams in the last set.</p>"+
+            "<p>On average, you got <b>"+percentCorrectAnagrams+" percent</b> correct.</p>"
+        }
+        },
+    choices: ["Next"],
+    on_finish: function(data) {
+        data.phase = "Anagram"
+        blockTrialNumberAnagram = 0;
+        data.percentCorrectAnagrams = percentCorrectAnagrams
+        if(anagramDifficultySelector == "EASY"){
+            data.difficulty = "Easy"
+        } else if(anagramDifficultySelector == "MEDIUM"){
+            data.difficulty = "Medium" 
+        }
+        anagramDiffCounter = anagramDiffCounter + 1
+        anagramDifficultySelector = anagramSelectorArray[anagramDiffCounter]
+    }
+};
+
+
+
+
+
+//Screen to appear when block has timed out
+
+var anagramFinishBlock_screen = {
+        type: 'html-button-response',
+        timing_post_trial: 0,
+	    choices: ['Click here to continue'],
+        is_html: true,
+        stimulus: '<b>Congratulations</b></br>You have finished this 3 minute set!<p>',
+        on_finish: function(data) {
+        totalBlockTime = 0
+        data.phase = "Anagram"
+        }
+    };
+
+
+
+// How Effortful Anagram check //
+
+var anagram_effortCheck = {
+        type: 'html-slider-response',
+        stimulus: function() {
+        if(anagramDifficultySelector == "EASY") {   
+        return "<p style='font-size: 30px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Set of Anagrams</b></p></br>"+
+        "<span style='font-size: 22px;'><p>How effortful did you find the previous task?</p>"
+        } else if(anagramDifficultySelector == "MEDIUM") {
+        return  "<p style='font-size: 30px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Set of Anagrams</b></p></br>"+
+        "<span style='font-size: 22px;'><p>How effortful did you find the previous task?</p>"
+        }
+            },
+        labels: ["0 </br> Not Effortful", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100</br> Extremely Effortful"],
+        button_label: "Submit",
+        require_movement: true,
+        slider_width: 1000,
+        on_finish: function(data) {
+            data.effortCheck_task = "anagram"+anagramDifficultySelector,
+            data.effortCheck_response = data.response
+        }
+    };
+
+//timeline push to display the finish block screen
+var anagramConditional_splash = {
+        timeline: [anagramFinishBlock_screen],
+        conditional_function: function(data) {
+			return timeLimitReached // skip if time has not been reached
+        }
+    };
+
+//Loop for the number sequence task.
+var anagramLoop_node = {
+    timeline: [anagramTimeBasedLoop, anagramConditional_splash],
+    loop_function: function(data) {
+        //var action = true;
+  return !timeLimitReached // stop looping if correct
+    }
+};
+
+
+var anagramRunIntro = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>The next run will consist of <b>anagrams</b>.</p><p>Remember, the goal here is to unscramble the word and type it in the box (in <b>CAPITAL LETTERS</b>).</p>",
+    choices: ['Next']
+};
+
+// Anagram Loop Node
+
+var anagramLoopNode = [anagramRunIntro, anagramSeqPreamble, anagramLoop_node, anagram_effortCheck, blockFeedbackAnagram, anagramSeqPreamble, anagramLoop_node, anagram_effortCheck, blockFeedbackAnagram]
+
+
+// Number Sequence Problem layout //
+
+
+//Counter for image/problem to display + correctAnswer variable
+var numCountEasy = 0
+var numCountMed = 0
+var blockTrialNumberNumseq = 0
+
+
+
+// Randomly select a difficulty
+
+var numDiff1 = ["EASY","MEDIUM"];
+numDiff1 = jsPsych.randomization.shuffle(numDiff1);
+
+ var numDiff2 = ["EASY","MEDIUM"];
+ numDiff2 = jsPsych.randomization.shuffle(numDiff2);
+
+ var numSelectorArray = numDiff1.concat(numDiff2);
+
+ var numDiffCounter = 0
+
+ var numDifficultySelector = numSelectorArray[numDiffCounter]; 
+
+
+ // premable with difficulty level
+
+var numSeqPreamble = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(numDifficultySelector == "EASY") {
+            return "<span style='font-size: 22px;'><p>The next run of number problems are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Set</b></p>"+
+             "<span style='font-size: 22px;'>Please answer the missing number in the box below each problem.</br></br>" 
+        }
+        else if(numDifficultySelector == "MEDIUM") {
+          return "<span style='font-size: 22px;'><p>The next run of number problems are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Set</b></p>"+
+             "<span style='font-size: 22px;'>Please answer the missing number in the box below each problem.</br></br>" 
+        }
+    },
+    choices: ['Start']
+};
+
+
+//Time based Number problem block
+
+var numTimeBasedLoop = {
+type: 'survey-text',
+preamble: function() {
+        if(numDifficultySelector == "EASY") {
+            return "<p style='font-size: 40px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Set</b></p></br>"+
+            '<img src="' + easyImagesShuffle[numCountEasy] + '"width = "500"></img>'
+        }
+        else if(numDifficultySelector == "MEDIUM") {
+            return "<p style='font-size: 40px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Set</b></p></br>"+
+            '<img src="' + mediumImagesShuffle[numCountMed] + '"width = "500"></img>'
+        }
+    }, 
+questions: [{prompt: "<b>Answer</b>", placeholder: "e.g., 15", required: true}],
+button_label: "Submit",
+post_trial_gap: 1,
+on_finish: function(data) {
+    data.phase = "Numseq"
+    blockTrialNumberNumseq = blockTrialNumberNumseq + 1
+        if(numDifficultySelector == "EASY" & easyImagesShuffle[numCountEasy].length == 29){
+         correctAnswer = easyImagesShuffle[numCountEasy].slice(24,25)
+         data.problem = easyImagesShuffle[numCountEasy].slice(17,23)
+         data.difficulty = "Easy"
+         data.setColour = colourShuffleNumseq[0]
+         numCountEasy = numCountEasy + 1
+         } else if(numDifficultySelector == "EASY" & easyImagesShuffle[numCountEasy].length == 30) {
+         correctAnswer = easyImagesShuffle[numCountEasy].slice(24,26)
+         data.problem = easyImagesShuffle[numCountEasy].slice(17,23)
+         data.difficulty = "Easy"
+         data.setColour = colourShuffleNumseq[0]
+         numCountEasy = numCountEasy + 1
+         } else if(numDifficultySelector == "EASY" & easyImagesShuffle[numCountEasy].length == 31) {
+         correctAnswer = easyImagesShuffle[numCountEasy].slice(24,27)
+         data.problem = easyImagesShuffle[numCountEasy].slice(17,23)
+         data.difficulty = "Easy"
+         data.setColour = colourShuffleNumseq[0]
+         numCountEasy = numCountEasy + 1
+         } else if (numDifficultySelector == "MEDIUM" & mediumImagesShuffle[numCountMed].length == 29) {
+         correctAnswer = mediumImagesShuffle[numCountMed].slice(24,25)
+         data.problem = mediumImagesShuffle[numCountMed].slice(17,23)
+         data.difficulty = "Medium"
+         data.setColour = colourShuffleNumseq[1]
+         numCountMed = numCountMed + 1
+         } else if(numDifficultySelector == "MEDIUM" & mediumImagesShuffle[numCountMed].length == 30) {
+         correctAnswer = mediumImagesShuffle[numCountMed].slice(24,26)
+         data.problem = mediumImagesShuffle[numCountMed].slice(17,23)
+         data.difficulty = "Medium"
+         data.setColour = colourShuffleNumseq[1]
+         numCountMed = numCountMed + 1
+         } else if(numDifficultySelector == "MEDIUM" & mediumImagesShuffle[numCountMed].length == 31) {
+         correctAnswer = mediumImagesShuffle[numCountMed].slice(24,27)
+         data.problem = mediumImagesShuffle[numCountMed].slice(17,23)
+         data.difficulty = "Medium"
+         data.setColour = colourShuffleNumseq[1]
+         numCountMed = numCountMed + 1
+         } 
+    Answer = JSON.stringify(data.response)
+    Answer2 = Answer.slice(6,)
+    Answer3 = Answer2.match(/"([^"]+)"/)
+    prevAnswer = Answer3[1]
+    blockTime = data.rt 
+    totalBlockTime = totalBlockTime + blockTime
+    data.answer = prevAnswer
+    data.correctAnswer = correctAnswer
+    if(totalBlockTime < 180000) {
+       timeLimitReached = false
+    } else if (totalBlockTime >= 180000) {
+       timeLimitReached = true
+    }
+    if(prevAnswer == correctAnswer) {
+             data.correct = true
+         } else {
+             data.correct = false
+         } 
+      }
+};
+
+//Feedback after each trial
+var numTrialFeedback = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(prevAnswer == correctAnswer) {
+            return "<span style='font-size: 30px;'><b>Correct!</b></br></br>"
+        }
+            else {
+                return "<span style='font-size: 30px;'><b>Wrong!</b></br></br>"
+            }
+    },
+    choices: ["Next"],
+    on_finish: function(data) {
+    }
+};
+
+// Number problem block feedback
+
+var prevNumTrials = null
+var correctNumseq = null
+var prevNumCount = null
+var percentCorrectNum = null
+
+var blockFeedbackNumseq = {
+    type: 'html-button-response',
+    stimulus: function() {
+         prevNumTrials = jsPsych.data.get().last(blockTrialNumberNumseq+2);
+         correctNumseq = prevNumTrials.filter({correct: true}).count();
+         prevNumCount = (prevNumTrials.count()-2)
+         percentCorrectNum = ((correctNumseq/prevNumCount)*100).toFixed(2);
+        if(numDifficultySelector == "EASY") {
+        return "<p style='font-size: 40px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Set</b></p></br>"+
+            "<span style='font-size: 22px;'><p>All done!</p>"+
+            "<p>You correctly solved "+correctNumseq+" out of "+prevNumCount+" problems in the last set.</p>"+
+            "<p>On average, you got <b>"+percentCorrectNum+" percent</b> correct.</p>"
+        } else if(numDifficultySelector == "MEDIUM") {
+        return "<p style='font-size: 40px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Set</b></p></br>"+
+            "<span style='font-size: 22px;'><p>All done!</p>"+
+            "<p>You correctly solved "+correctNumseq+" out of "+prevNumCount+" problems in the last set.</p>"+
+            "<p>On average, you got <b>"+percentCorrectNum+" percent</b> correct.</p>"
+        }
+        },
+    choices: ["Next"],
+    on_finish: function(data) {
+        data.phase = "Numseq"
+        blockTrialNumberNumseq = 0;
+        data.percentCorrectNum = percentCorrectNum
+        if(numDifficultySelector == "EASY"){
+            data.difficulty = "Easy"
+        } else if(numDifficultySelector == "MEDIUM"){
+            data.difficulty = "Medium" 
+        }
+        numDiffCounter = numDiffCounter + 1
+        numDifficultySelector = numSelectorArray[numDiffCounter]
+    }
+};
+
+
+
+//Screen to appear when block has timed out
+
+var numFinishBlock_screen = {
+        type: 'html-button-response',
+        timing_post_trial: 0,
+	    choices: ['Click here to continue'],
+        is_html: true,
+        stimulus: '<b>Congratulations</b></br>You have finished this 3 minute set!<p>',
+        on_finish: function(data) {
+        totalBlockTime = 0
+        }
+    };
+
+
+// How Effortful Anagram check //
+
+var number_effortCheck = {
+        type: 'html-slider-response',
+        stimulus: function() {
+        if(numDifficultySelector == "EASY") {   
+        return "<p style='font-size: 30px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Set of Number Problems</b></p></br>"+
+        "<span style='font-size: 22px;'><p>How effortful did you find the previous task?</p>"
+        } else if(numDifficultySelector == "MEDIUM") {
+        return  "<p style='font-size: 30px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Set of Number Problems</b></p></br>"+
+        "<span style='font-size: 22px;'><p>How effortful did you find the previous task?</p>"
+        }
+            },
+        labels: ["0 </br> Not Effortful", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100</br> Extremely Effortful"],
+        button_label: "Submit",
+        require_movement: true,
+        slider_width: 1000,
+        on_finish: function(data) {
+            data.effortCheck_task = "numseq"+numDifficultySelector,
+            data.effortCheck_response = data.response
+        }
+    };
+
+//timeline push to display the finish block screen
+var numConditional_splash = {
+        timeline: [numFinishBlock_screen],
+        conditional_function: function(data) {
+			return timeLimitReached // skip if time has not been reached
+        }
+    };
+
+//Loop for the number sequence task.
+var numLoop_node = {
+    timeline: [numTimeBasedLoop, numConditional_splash],
+    loop_function: function(data) {
+        //var action = true;
+  return !timeLimitReached // stop looping if correct
+    }
+};
+
+var numseqRunIntro = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>The next run will consist of <b>number problems</b>.</p><p>Remember, the goal here is to figure out the pattern and then solve the missing number.</p>",
+    choices: ['Next']
+};
+
+
+
+var numLoopNode = [numseqRunIntro, numSeqPreamble, numLoop_node, number_effortCheck, blockFeedbackNumseq, numSeqPreamble, numLoop_node, number_effortCheck, blockFeedbackNumseq]
+
+
+
+ // Welcome message 
+
+ var welcome = {
+   timeline: [
+     {
+     type: 'html-keyboard-response',
+     stimulus: "<span style='font-size: 22px;'> Welcome to the experiment.</br></br>"+
+      "In this experiment you will be solving numerous problems (which we will explain soon).</br></br>"+
+      "Before we begin, could you please place your <b>phone out of sight</b> and close any other tabs you have open which may distract you.</br>Thanks!</br></br>"+
+      "<b>You will be quizzed on these instructions, so it is best to read them carefully!</br></br></br></br></br></span>",
+     choices: jsPsych.NO_KEYS,
+     trial_duration: 5000
+     },
+     {
+     type: 'html-button-response',
+     stimulus: "<span style='font-size: 22px;'> Welcome to the experiment.</br></br>"+
+      "In this experiment you will be solving numerous problems (which we will explain soon).</br></br>"+
+      "Before we begin, could you please place your <b>phone out of sight</b> and close any other tabs you have open which may distract you.</br>Thanks!</br></br>"+
+      "<b>You will be quizzed on these instructions, so it is best to read them carefully!</br></br></br></br></span>",
+     choices: ['Start'],
+     }
+    ]
+ }
+
+ timeline.push(welcome);
+
+ //Introduction to the number sequence task
+
+ var intro1 = {
+    type: 'html-button-response',
+    stimulus:
+        "<span style='font-size: 22px;'><p>This experiment involves three different kinds of problems: <b>Anagrams, Number Sequences, and the N-Back task</b>.</p>"+
+        "<p>Do not worry if you are unfamiliar with these problems, we will explain them all beforehand.</p>"+
+        "<p>During the training stage of the experiment you will get experience with each of the different tasks.",
+    choices: ['Continue']
+    };
+
+   timeline.push(intro1)
+
+ //Training for N-Back task
+
+ var nBackIntro = {
+     type: 'html-button-response',
+     stimulus: "<span style='font-size: 22px;'><p>Firstly, we will run you through the <b>N-Back task</b>.</br></br>Press continue to read about the N-Back task and run through an example.",
+     choices: ["Continue"]
+ };
+
+
+ var nBackIntro1 = {  
+   type: 'html-button-response',
+   stimulus: "<span style='font-size: 22px;'>In the N-Back task random letters will appear on the screen, one after the other.</br></br>"+
+    "Your job is to determine whether the current letter matches the letter from 'N' trials ago.</br>Where N is a number such as 1 or 3.</br></br>"+
+    "On the next page we will show you what a 1-back task is like and how to do it — that is, where N = 1.</br></br>",
+   choices: ['Next'],
+   };
+
+
+   var oneBackExample = {
+   timeline: [
+     {
+       type: 'html-button-response',
+       stimulus: "<img src= 'N-Back Images/backOne.png'></img></br></br>"+  
+       "<span style='font-size: 22px;'>"+
+       "In a <b>1-back</b> task, you are required to answer whether the current letter matches the letter from <b>one trial ago</b>.</br></br>"+
+       "If the current letter matches the letter from one trial before, press 'm' on your keyboard while the letter is on screen.</br>"+
+       "If the current letter is different, you don't need to press anything.</br></br>"+
+       "<p><b>For the above example, you should press 'm' on trial 3 as the letter (X) is the same as one trial ago (X on trial 2).</b></p>"+ // this will depend on the image
+       "Press 'Watch Practice 1-Back' to see an example of how to perform the task.</br></br></span>",
+       choices: ['Watch Practice 1-Back']
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;">C</span>',
+       choices: ['M'],
+       trial_duration: 1500,
+       post_trial_gap: 1500,
+       response_ends_trial: false,
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;">Z</span>',
+       choices: ['M'],
+       trial_duration: 1500,
+       post_trial_gap: 1500,
+       response_ends_trial: false,
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;"></br>Z</br></br></span>'+
+       "<span style='font-size: 20px;'>On this trial you <b>should</b> press 'm' because the current letter (Z) is the same letter as one trial ago (Z).</span>",
+       choices: ['M'],
+       trial_duration: 7500,
+       post_trial_gap: 1500,
+       response_ends_trial: false,
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;"></br>V</br></br></span>'+
+       "<span style='font-size: 20px;'>On this trial you <b>should not</b> press 'm' because the current letter (V) is <b>not</b> the same letter as one trial ago (Z).</span>",
+       choices: ['M'],
+       trial_duration: 7500,
+       post_trial_gap: 1000,
+       response_ends_trial: false,
+     },
+   ]
+ };
+
+ var n_back_sequenceTestRun = {
+      timeline: [n_back_trial],
+      timeline_variables: n_back_trials,
+      sample: {
+        type: 'with-replacement',
+        size: sequence_lengthPractice,
+        weights: [1, 2]
+      }
+    };
+
+
+ var oneBackTestRun = {
+   type: 'html-button-response',
+   stimulus: function(){
+     sequence = [];
+    if(how_many_back >= 0){
+      how_many_back = 1
+    } 
+    return "<span style='font-size: 22px;'>We're now going to let you try a <b>1-back</b> task for real, with some feedback on your performance.</br></br>"
+    },
+   choices: ['Start']
+ };
+
+ timeline.push(nBackIntro, nBackIntro1, oneBackExample, oneBackTestRun, n_back_sequenceTestRun, feedbackPractice)
+
+ // Introduction to a 3-back Task
+
+ var threeBackIntro = {
+     timeline: [
+    {     
+    type: 'html-button-response',
+    stimulus: "<img src= 'N-Back Images/backThree.png'></img></br></br>"+  
+       "<span style='font-size: 22px;'>"+
+       "<p>The other type of task you will perform is a 3-back task.</p></br>"+
+       "In a <b>3-back</b> task, you are required to answer whether the current letter matches the letter from <b>3 trials ago</b>.</br></br>"+
+       "If the current letter matches the letter from three trials before, press 'm' on your keyboard while the letter is on screen.</br>"+
+       "If the current letter is different, you don't need to press anything.</br></br>"+
+       "<p><b>For the above example, you should press 'm' on trial 4 as the letter (X) is the same as three trials ago (X on trial 1).</b></p>"+ // this will depend on the image
+       "Press 'Watch Practice 3-Back' to see an example of how to perform the task.</br></br></span>",
+    choices: ['Watch Practice 3-Back']
+    },
+    {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;">C</span>',
+       choices: ['M'],
+       trial_duration: 1500,
+       post_trial_gap: 1500,
+       response_ends_trial: false,
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;">V</span>',
+       choices: ['M'],
+       trial_duration: 1500,
+       post_trial_gap: 1500,
+       response_ends_trial: false,
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;"></br>X</br></br></span>',
+       choices: ['M'],
+       trial_duration: 1500,
+       post_trial_gap: 1500,
+       response_ends_trial: false,
+     },
+     {
+       type: 'html-keyboard-response',
+       stimulus: '<span style="font-size: 140px;"></br>C</br></br></span>'+
+       "<span style='font-size: 20px;'>On this trial you <b>should</b> press 'm' because the current letter (C) is the same letter as three trials ago (C).</span>",
+       choices: ['M'],
+       trial_duration: 7500,
+       post_trial_gap: 1000,
+       response_ends_trial: false,
+     },
+   ]
+ };
+
+
+ var threeBackTestRun = {
+   type: 'html-button-response',
+   stimulus: function(){
+     sequence = [];
+    if(how_many_back >= 0){
+      how_many_back = 3
+    } 
+    return "<span style='font-size: 22px;'>We're now going to let you try a <b>3-back</b> task for real, with some feedback on your performance.</br></br>"
+    },
+   choices: ['Start']
+ };
+
+// Zero back code for instructions
+/* var zeroBackTestRun = {
+    type: 'html-button-response',
+   stimulus: function(){
+     sequence = [];
+    if(how_many_back >= 0){
+      how_many_back = 0
+    } 
+    return "<span style='font-size: 22px;'>We're now going to let you try a <b>0-back</b> task for real, with some feedback on your performance.</br></br>"
+    },
+   choices: ['Start']
+ }; */
+
+ timeline.push(threeBackIntro, threeBackTestRun, n_back_sequenceTestRun, feedbackPractice)
+
+
+ // Introducing Anagram Task
+
+ var anagramIntro = {
+     type: 'html-button-response',
+     stimulus: "<span style='font-size: 22px;'><p>Another type of task are <b>anagrams</b>.</br></br> On the next page we will explain what these are and how to solve them.</p>",
+     choices: ['Next']
+ };
+
+ var anagramIntro1 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 80px;'><p><b>GANMAAR</b></p></span>"+
+        "<span style='font-size: 22px;'></br></br></br></br><p>The above is an example of an anagram.</p>"+
+        "<p>It is a word where all the letters have been jumbled up.</br> Your goal is to unscramble the letters and solve the full word (which coincidentally spells the word ANAGRAM above).</p>"+
+        "<p>There is only one solution to each anagram in this experiment and you must use all of the letters provided.</p>"+
+        "<p>None of the words/anagrams displayed will be acronyms or slang for other words.</p>"+
+        "<p>You will also need to type your answers in CAPITAL LETTERS. So it is best to turn your <b>CAPS LOCK</b> key on.</br> You can leave it on for the entirety of the experiment</p>",
+    choices: ['Continue']
+    };
+
+   timeline.push(anagramIntro, anagramIntro1)
+
+    var anagramIntro2 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p> To check you understand the basics of the task, the next page has a practice anagram.</p>"+
+    "<p>Don't stress if you can't figure it out, not all of the anagrams will be this difficult.</p>"+
+    "<p>Press Next to attempt the practice anagram.</p></span>",
+    choices: ["Next"],
+};
+
+timeline.push(anagramIntro2)
+
+var correctAnagramPrac = "PROLIFIC";
+
+
+var anagramPracticeProblems = {
+    type: 'survey-text',
+    preamble: "<span style='font-size: 80px;''><p><b>LIFOPICR</b></p></span>"+
+    "<span style='font-size: 22px;'></br></br></br></br><p>The above is a practice anagram.</p><p>Type below (in <b>CAPITAL LETTERS</b>) what you believe the correct answer is.</p>"+
+    "You will be given feedback after submitting your answer.</br></span>",
+    questions: [{prompt: "", placeholder: "", required: true}],
+    button_label: "Submit",
+    post_trial_gap: 500,
+    on_finish: function(data) {
+    AnswerPrac = JSON.stringify(data.response)
+    AnswerPrac2 = AnswerPrac.slice(6,)
+    AnswerPrac3 = AnswerPrac2.match(/"([^"]+)"/)
+    prevAnswerPrac = AnswerPrac3[1]
+    }
+};
+
+var trialAnagramFeedbackPractice = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(prevAnswerPrac == correctAnagramPrac) {
+            return "<b>Correct!</b></br></br>The solution was 'PROLIFIC'.</br></br>"
+        }
+            else {
+                return "<b>Wrong!</b></br></br>The correct solution was 'PROLIFIC'.</br></br>"
+            }
+    },
+    choices: ["Next"],
+};
+
+    timeline.push(anagramPracticeProblems, trialAnagramFeedbackPractice)
+
+    var anagramIntro3 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>In the experiment, anagrams will come in different sets:</p></span>"+
+        "<p style='font-size: 22px;color:red'><b>RED</b></p>"+
+        "<p style='font-size: 22px;color:blue'><b>BLUE</b></p>"+
+        "<span style='font-size: 22px;'><p>You will be told which set you are doing before each run of anagrams as well as being reminded during the run.</p></span>",
+    choices: ["Next"],
+};
+
+   timeline.push(anagramIntro3)
+
+
+// Instruction for number problems
+
+
+var numseqIntro = {
+     type: 'html-button-response',
+     stimulus: "<span style='font-size: 22px;'><p>The final type of task are <b>number problems</b>.</br></br> On the next page we will explain what these are and how to solve them.</p>",
+     choices: ['Next']
+ };
+
+var numseqIntro1 = {
+    type: 'html-button-response',
+    stimulus: '<img src="./sequenceImages/exampleProblem.png" width = "550"></img></br></br>'+
+        "<span style='font-size: 22px;'><p>The above is an example of a number problem.</p>"+
+        "<p>In each problem, the numbers follow a specific pattern which starts from the top right and moves clockwise around the circle. </br> Your goal is to figure out the pattern and correctly guess the missing number.</br></br>"+
+        "In the above example the pattern is +1 starting from the top right (1) and moving clockwise around the circle (as shown by the arrow). </br> The missing number (?) in the above example is 6.</span>",
+    choices: ['Continue']
+    };
+
+var numseqIntro2 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p> To check you understand the basics of the number problem task, the next page has a practice problem.</p>"+
+    "<p>It is easy (don't stress).</p>"+
+    "<p>Press Next to attempt the practice question.</p></span>",
+    choices: ["Next"],
+};
+
+timeline.push(numseqIntro, numseqIntro1, numseqIntro2)
+
+var correctNumseqPrac = 11;
+
+
+var practiceNumseqProblems = {
+    type: 'survey-text',
+    preamble: '<img src="./sequenceImages/practiceProblem.png" width = "500"></img></br></br>'+
+    "<p>The above is a practice problem.</p><p>Type below what you believe the correct answer is.</p>"+
+    "You will be given feedback after submitting your answer.</br>",
+    questions: [{prompt: "", placeholder: "e.g., 15", required: true}],
+    button_label: "Submit",
+    post_trial_gap: 500,
+    on_finish: function(data) {
+    AnswerPrac = JSON.stringify(data.response)
+    AnswerPrac2 = AnswerPrac.slice(6,)
+    AnswerPrac3 = AnswerPrac2.match(/"([^"]+)"/)
+    prevAnswerPrac = AnswerPrac3[1]
+    }
+};
+
+var trialNumseqFeedbackPractice = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(prevAnswerPrac == correctNumseqPrac) {
+            return "<b>Correct!</b></br></br>The numbers were increasing by two each time meaning the missing number was 11.</br></br>"
+        }
+            else {
+                return "<b>Wrong!</b></br></br>The numbers were increasing by two each time meaning the missing number was 11.</br></br>"
+            }
+    },
+    choices: ["Next"],
+};
+
+ timeline.push(practiceNumseqProblems, trialNumseqFeedbackPractice)
+
+
+
+ var numseqIntro3 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>In the experiment, number problems will come in different sets:</p></span>"+
+        "<p style='font-size: 22px;color:orange'><b>ORANGE</b></p>"+
+        "<p style='font-size: 22px;color:green'><b>GREEN</b></p>"+
+        "<span style='font-size: 22px;'><p><p>You will be told which set you are doing before each run of problems as well as being reminded during the run.</p></span>",
+    choices: ["Next"],
+};
+
+timeline.push(numseqIntro3)
+
+// Final instruction before the task starts.
+
+var finalInstruct = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>You will now complete several runs of all the different problems – N-Back, Anagrams, and Number Problems – and the different sets of those problems.</p>"+
+        "<p>When you are ready to begin, press the 'Continue' button below.</p>",
+    choices: ['Continue']
+};
+
+timeline.push(finalInstruct)
+
+//Deciding the order of tasks
+
+var taskArray1 = jsPsych.randomization.shuffle(["Nback", "Anagram", "NumSeq"])
+var taskArray2 = jsPsych.randomization.shuffle(["Nback", "Anagram", "NumSeq"])
+var taskOrder = taskArray1.concat(taskArray2)
+
+var taskCounter = 0
+
+var currentTask = taskOrder[taskCounter]
+
+//Training Phase Loop
+
+var taskOrderDeterminer1 = jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,5,6],1)
+var taskOrderDeterminer2 = jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,5,6],1)
+
+
+jsPsych.data.addProperties({
+        taskOrder1: taskOrderDeterminer1,
+        taskOrder2: taskOrderDeterminer2,
+  });
+
+if(taskOrderDeterminer1 == 1){
+    timeline = timeline.concat(nBackLoop, anagramLoopNode, numLoopNode)
+} else if(taskOrderDeterminer1 == 2) {
+    timeline = timeline.concat(nBackLoop, numLoopNode, anagramLoopNode)
+} else if(taskOrderDeterminer1 == 3) {
+    timeline = timeline.concat(anagramLoopNode, nBackLoop, numLoopNode)
+} else if(taskOrderDeterminer1 == 4) {
+    timeline = timeline.concat(anagramLoopNode, numLoopNode, nBackLoop)
+} else if(taskOrderDeterminer1 == 5) {
+    timeline = timeline.concat(numLoopNode, anagramLoopNode, nBackLoop)
+} else if(taskOrderDeterminer1 == 6) {
+    timeline = timeline.concat(numLoopNode, nBackLoop, anagramLoopNode)
+}
+
+
+if(taskOrderDeterminer2 == 1){
+    timeline = timeline.concat(nBackLoop, anagramLoopNode, numLoopNode)
+} else if(taskOrderDeterminer2 == 2) {
+    timeline = timeline.concat(nBackLoop, numLoopNode, anagramLoopNode)
+} else if(taskOrderDeterminer2 == 3) {
+    timeline = timeline.concat(anagramLoopNode, nBackLoop, numLoopNode)
+} else if(taskOrderDeterminer2 == 4) {
+    timeline = timeline.concat(anagramLoopNode, numLoopNode, nBackLoop)
+} else if(taskOrderDeterminer2 == 5) {
+    timeline = timeline.concat(numLoopNode, anagramLoopNode, nBackLoop)
+} else if(taskOrderDeterminer2 == 6) {
+    timeline = timeline.concat(numLoopNode, nBackLoop, anagramLoopNode)
+} 
+
+
+// COGED Phase
+
+
+var cogED_Instruct = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>Congratulations on finishing the first phase of the experiment.</br></br>"+ 
+    "In this next section, you will choose between two different tasks.</br></br>"+
+    "You are choosing which task you would prefer to do given the amount of money on offer.</br></br></span>",
+  choices: ['Next']
+};
+
+var nBackSetReminder = {
+  type: 'html-button-response',
+  stimulus: function() {
+      return "<span style='font-size: 22px;'><p>In the <b>1-Back task</b> you were required to respond (press m) whether the current letter matched the <b>letter from 1 turn ago</b>.</p>"+
+             "<span style='font-size: 22px;'><p>In the <b>3-Back task</b> you were required to respond (press m) whether the current letter matched the <b>letter from 3 turns ago</b>.</b>.</p>"
+    },
+  choices: ['Next']
+};
+
+var anagramSetReminder = {
+  type: 'html-button-response',
+  stimulus: function() {
+      return "<span style='font-size: 22px;'><p> Anagrams in the </span><span style='font-size: 22px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Set </b></span><span style='font-size: 22px;'> are <b>3 letters in length</b>.</br>"+
+             "<span style='font-size: 22px;'><p> Anagrams in the </span><span style='font-size: 22px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Set </b></span><span style='font-size: 22px;'> are <b>5 letters in length</b>.</br>"
+    },
+  choices: ['Next']
+};
+
+var numseqSetReminder = {
+  type: 'html-button-response',
+  stimulus: function() {
+      return "<span style='font-size: 22px;'>Below is an example <b>number problem</b> from each set to remind you of the sorts of problems in each.</p></span>"+
+      "<span style='font-size: 22px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Set &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style='font-size: 22px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Set </span></br></br>"+
+      "<img src='./sequenceImages/numseqReminder.png'width = '1000'></img></br></br>"
+  },
+  choices: ['Next']
+};
+
+var cogED_Instruct2 = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>"+
+    "<b>Below is an example of what the choices might look like and what the choices mean.</b></br></br></span>",
+  choices: ["<span style='font-size: 24px;color:blue'><b>BLUE Anagrams</b></span><span style='font-size: 24px;'> for <b>£1.00</b>", "<span style='font-size: 24px;'><b>3-Back Task</b></span><span style='font-size: 24px;'> for <b>£2.00</b>"],
+  prompt: "<span style='font-size: 22px;'></br>Above, if you choose the left option, you would prefer to do a </span><span style='font-size: 22px; color:blue'><b> BLUE set of Anagrams</b></span><span style='font-size: 22px;'> for 3 minutes, receiving £1.00 as a bonus.</span></br></br>"+
+    "<span style='font-size: 22px;'>If you choose the right option, you would prefer to do a <b>3-Back task </b></span><span style='font-size: 22px;'> for 3 minutes, receiving £2.00 as a bonus.</span></br></br>"+
+    "<span style='font-size: 22px;'>Press either of the above buttons to continue (these are just examples, your choice won't be recorded).</span>"
+}
+
+var cogED_Instruct22 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'>"+
+        "<p>One of your choices (for example, <b>BLUE Anagrams for £1.00</b>) in the task will be selected at random and you will complete the chosen task for 3-minutes,</br> receiving the amount of money offered as a bonus.</p>"+
+        "<p>Any single one of your choices may be selected, therefore, you should take every choice between the two options seriously.</p>",
+    choices: ["Next"]
+};
+
+var cogED_Instruct3 = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>There is no minimum percent correct or number of problems you need to solve in order to be paid your bonus.</br></br>"+
+    "We are interested in which task you would prefer to do, not which one you believe are best at.</br></br>"+
+    "We will however monitor your effort during the task to make sure you are at least trying.</br>(e.g., not entering random letters every trial or browsing another tab)</br></br>"+
+    "Before you begin with this task the next few pages will give you a reminder of the different types of tasks (and coloured sets).</br></br><b>Please take note of the differences between types (e.g., coloured sets) of tasks, you will be asked about these at the experiment's end.</br></br></span>",
+  choices: ["Next"]
+};
+
+ timeline.push(cogED_Instruct, cogED_Instruct2, cogED_Instruct22, cogED_Instruct3, nBackSetReminder, anagramSetReminder, numseqSetReminder);
+
+
+// Actual COGED Task
+
+// Discounting task starting parameters
+  var choiceNumber = 1; //the trial number of choices
+  var leftMoney = 2; //starting value for easy
+  var rightMoney = 2; // starting value for harder option 
+  var additive = 1 // The amount added or substracted from the left option (first one is actually .5, check code for why)
+  var runArray = jsPsych.randomization.shuffle([1,2,3,4,5,6]); // to determine which run of 1 v n we are up to. 
+  var run = 0 // Determines which comparison is displayed
+  var titrateSide = 2 // just any number other than 0 or 1
+  var cogedArray = [];
+  var choice = null 
+  var leftColour = null
+  var rightColour = null
+  var leftDiff = null
+  var rightDiff = null
+
+
+// COG_ED Discounting task
+
+
+// Instructions prior to discount
+
+var discountInformation = {
+  type: 'html-button-response',
+  stimulus: function() {
+    if(runArray[run] == 1) {
+      return "The next section of choices will be between a <span style='font-size: 24px;'><b>1-Back task</b></span> and a set of <span style='font-size: 24px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</b></span>.</br></br>"+
+      "Remember, one of these choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money.</br></br>" 
+  } else if(runArray[run] == 2) {
+    return "The next section of choices will be between a <span style='font-size: 24px;'><b>3-Back task</b></span> and a set of <span style='font-size: 24px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</b></span>.</br></br>"+
+      "Remember, one of these choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money.</br></br>" 
+  } else if(runArray[run] == 3) {
+    return "The next section of choices will be between a <span style='font-size: 24px;'><b>1-Back task</b></span> and a set of <span style='font-size: 24px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</b></span>.</br></br>"+
+      "Remember, one of these choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money.</br></br>" 
+  } else if(runArray[run] == 4) {
+    return "The next section of choices will be between a <span style='font-size: 24px;'><b>3-Back task</b></span> and a set of <span style='font-size: 24px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</b></span>.</br></br>"+
+      "Remember, one of these choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money.</br></br>" 
+  } else if(runArray[run] == 5) {
+    return "The next section of choices will be between a set of <span style='font-size: 24px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</b></span> and a set of <span style='font-size: 24px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</b></span>.</br></br>"+
+      "Remember, one of these choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money.</br></br>" 
+  } else if(runArray[run] == 6) {
+    return "The next section of choices will be between a set of <span style='font-size: 24px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</b></span> and a set of <span style='font-size: 24px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</b></span>.</br></br>"+
+      "Remember, one of these choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money.</br></br>" 
+  }
+},
+  choices: ['Start']
+};
+
+
+var discountTaskTrial = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>Which set would you rather do for 3 minutes?</br></br>",
+  choices: function() {
+    if(runArray[run] == 1) {
+    return ["<span style='font-size: 26px;'><b>1-Back Task</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(runArray[run] == 2) {
+      return ["<span style='font-size: 26px;'><b>3-Back Task</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(runArray[run] == 3){
+      return ["<span style='font-size: 26px;'><b>1-Back Task</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(runArray[run] == 4){
+      return ["<span style='font-size: 26px;'><b>3-Back Task</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(runArray[run] == 5){
+      return ["<span style='font-size: 26px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(runArray[run] == 6){
+      return ["<span style='font-size: 26px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    }
+    },
+  prompt: "",
+  post_trial_gap: 500,
+  on_finish: function(data) {
+    data.compareType = runArray[run]
+    if(runArray[run] == 1) {
+      leftDiff= "1B"
+      rightDiff = "MN"
+      data.comparison = "1-Back vs Medium Numseq"
+    } else if(runArray[run] == 2) {
+      leftDiff= "3B"
+      rightDiff = "EN"
+      data.comparison = "3-Back vs Easy Numseq"
+    } else if(runArray[run] == 3) {
+      leftDiff= "1B"
+      rightDiff = "MA"
+      data.comparison = "1-Back vs Medium Anagrams"
+    } else if(runArray[run] == 4) {
+      leftDiff= "3B"
+      rightDiff = "EA"
+      data.comparison = "3-Back vs Easy Anagrams"
+    } else if(runArray[run] == 5) {
+      leftDiff= "EN"
+      rightDiff = "MA"
+      data.comparison = "Easy Numseq vs Medium Anagrams"
+    } else if(runArray[run] == 6) {
+      leftDiff= "MN"
+      rightDiff = "EA"
+      data.comparison = "Medium Numseq vs Easy Anagrams"
+    }
+    if(data.response == 0 && choiceNumber == 1) {
+    titrateSide = 0
+    data.cogED_Choice = leftDiff+" for "+leftMoney.toFixed(2); 
+    choice = leftDiff+" for "+leftMoney.toFixed(2);
+    leftMoney = leftMoney - additive;
+    data.preference = leftDiff;
+    } else if(data.response == 1 && choiceNumber == 1){
+    titrateSide = 1
+    data.cogED_Choice = rightDiff + " for " + rightMoney.toFixed(2);
+    choice = rightDiff + " for " + rightMoney.toFixed(2);
+    rightMoney = rightMoney - additive;
+    data.preference = rightDiff;
+    } else if(data.response == 0 && titrateSide == 0){
+    data.cogED_Choice = leftDiff+" for "+leftMoney.toFixed(2);
+    choice = leftDiff+" for "+leftMoney.toFixed(2);
+    leftMoney = leftMoney - additive;
+    } else if(data.response ==  0 && titrateSide == 1){
+      data.cogED_Choice = leftDiff+" for "+leftMoney.toFixed(2);
+      choice = leftDiff+" for "+leftMoney.toFixed(2);
+      rightMoney = rightMoney + additive;
+    } else if(data.response == 1 && titrateSide == 0) {
+      data.cogED_Choice = rightDiff + " for " + rightMoney.toFixed(2);
+      choice = rightDiff + " for " + rightMoney.toFixed(2);
+      leftMoney = leftMoney + additive;
+    } else if (data.response == 1 && titrateSide == 1){
+      data.cogED_Choice = rightDiff + " for " + rightMoney.toFixed(2);
+      choice = rightDiff + " for " + rightMoney.toFixed(2);
+      rightMoney = rightMoney - additive;
+    }
+    data.choiceNumber = choiceNumber++ 
+    if(choiceNumber == 8 && titrateSide == 0) {
+      data.indifferencePoint = leftMoney
+      run = run + 1
+      choiceNumber = 1
+      additive = 2
+      leftMoney = 2
+      rightMoney = 2
+    } else if(choiceNumber == 8 && titrateSide == 1){
+      data.indifferencePoint = rightMoney
+      run = run + 1
+      choiceNumber = 1
+      additive = 2
+      leftMoney = 2
+      rightMoney = 2
+    }
+    additive = additive/2
+    cogedArray.push(choice)
+ }
+};
+
+var discountLoop = [discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial]
+ timeline = timeline.concat(discountInformation, discountLoop, discountInformation, discountLoop, discountInformation, discountLoop, discountInformation, discountLoop, discountInformation, discountLoop, discountInformation, discountLoop)
+  
+
+//Select random trial, and participant performs task for 3 minutes
+
+var randomTrial = null
+
+
+var threeTrialFinish = {
+  type: 'html-button-response',
+  stimulus: function() {
+    randomTrial = jsPsych.randomization.sampleWithoutReplacement(cogedArray,1)[0];
+    if(randomTrial.slice(0,2) == 'EA') {
+       anagramDifficultySelector = "EASY"
+       return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</b></span><span style='font-size: 24px;'> for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,2) == 'MA'){
+      anagramDifficultySelector = "MEDIUM"
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</b></span><span style='font-size: 24px;'> for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,2) == '1B') {
+      how_many_back = 1
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;'>1-Back Task </b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a <span style='font-size: 24px;'>1-Back Task </b></span><span style='font-size: 24px;'> for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,2) == '3B') {
+      how_many_back = 3
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;'>3-Back Task </b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a <span style='font-size: 24px;'>3-Back Task </b></span><span style='font-size: 24px;'> for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,2) == 'EN'){
+      numDifficultySelector = "EASY"
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</b></span><span style='font-size: 24px;'> for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,2) == 'MN'){
+      numDifficultySelector = "MEDIUM"
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</b></span><span style='font-size: 24px;'> for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    }
+  },
+  choices: ['Next'],
+  on_finish: function(data) {
+    numCountEasy = 0
+    numCountMed = 0
+    anagramCountEasy = 0
+    anagramCountMed = 0
+  }
+};
+
+ timeline.push(threeTrialFinish)
+
+ // Push final run through depending on the random trial selected
+
+
+var finalTask1 = {
+    timeline: [anagramSeqPreamble, anagramLoop_node, blockFeedbackAnagram],
+    conditional_function: function(){
+        if(randomTrial.slice(0,2) == "EA" || randomTrial.slice(0,2) == "MA"){
+            return true
+        } else {return false}
+    }
+}
+
+var finalTask2 = {
+    timeline: [nLengthDeterminer, n_back_sequence, feedback],
+    conditional_function: function(){
+        if(randomTrial.slice(0,2) == "1B" || randomTrial.slice(0,2) == "3B"){
+            return true
+        } else {return false}
+    }
+}
+
+var finalTask3 = {
+    timeline: [numSeqPreamble, numLoop_node, blockFeedbackNumseq],
+    conditional_function: function(){
+        if(randomTrial.slice(0,2) == "EN" || randomTrial.slice(0,2) == "MN"){
+            return true
+        } else {return false}
+    }
+}
+
+ timeline.push(finalTask1, finalTask2, finalTask3)
+
+//Final post-task questions 
+
+
+var preFinalQs = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'<p>Congratulations, you have finished most of the experiment.</p>"+
+    "<p>We just have a few short and simple questions to ask you before you are done.</p><b>Thank you!</b></br></br>",
+  choices: ['Next'],
+  }
+
+  timeline.push(preFinalQs)
+
+//Slide to check how difficult participants found the problems from each set. 
+
+var diffSliderEasyAnagram = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffleAnagrams[0]+"'><b>"+colourShuffleAnagrams[0]+" Anagrams</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    slider_width: 500,
+    prompt: "<b>How hard did you find problems from the above set?</b></br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Easy Anagram",
+      data.sliderResponse = data.response
+    }
+  }
+
+  var diffSliderMedAnagram = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffleAnagrams[1]+"'><b>"+colourShuffleAnagrams[1]+" Anagrams</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    slider_width: 500,
+    prompt: "<b>How hard did you find problems from the above set?</b></br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Medium Anagram",
+      data.sliderResponse = data.response
+    }
+  }
+
+
+  var diffSliderEasyNumseq = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffleNumseq[0]+"'><b>"+colourShuffleNumseq[0]+" Number Problems</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true, 
+    slider_width: 500,
+    prompt: "<b>How hard did you find problems from the above set?</b></br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Easy Numbers",
+      data.sliderResponse = data.response
+    }
+  }
+
+  var diffSliderMedNumseq = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffleNumseq[1]+"'><b>"+colourShuffleNumseq[1]+" Number Problems</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    slider_width: 500,
+    prompt: "<b>How hard did you find problems from the above set?</b></br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Medium Numbers",
+      data.sliderResponse = data.response
+    }
+  }
+
+
+  var diffSlider0Back = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;'><b>1-Back Task</b></span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    slider_width: 500,
+    prompt: "<b>How hard did you find the above task?</b></br></br>",
+    on_finish: function(data) {
+      data.difficulty = "1-Back",
+      data.sliderResponse = data.response
+    }
+  }
+
+  var diffSlider2Back = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;'><b>3-Back Task</b></span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    slider_width: 500,
+    prompt: "<b>How hard did you find the above task?</b></br></br>",
+    on_finish: function(data) {
+      data.difficulty = "3-Back",
+      data.sliderResponse = data.response
+    }
+  }
+
+var allPostSliders = [diffSlider0Back, diffSlider2Back, diffSliderEasyAnagram, diffSliderMedAnagram, diffSliderEasyNumseq, diffSliderMedNumseq]
+allPostSliders = jsPsych.randomization.shuffle(allPostSliders)
+
+timeline = timeline.concat(allPostSliders)
+
+
+//Question asking participants how much they enjoy thinking.
+
+var enjoyThinkingQ = {
+  type: 'html-slider-response',
+  stimulus: "<span style='font-size: 24px;'>On a scale from 1 to 10, how much do you enjoy thinking?</br></br></span>",
+  labels: ["<b>1</b>", "<b>2</b>", "<b>3</b>", "<b>4</b>", "<b>5</b>", "<b>6</b>", "<b>7</b>", "<b>8</b>", "<b>9</b>", "<b>10</b>"],
+  step: 11,
+  slider_start: 1,
+  require_movement: true,
+  button_label: "Submit",
+  on_finish: function(data) {
+      data.thinkingResponse = data.response
+  }
+}
+
+timeline.push(enjoyThinkingQ);
+
+
+// slide asking if participants used a calculator
+
+var unscrambleCheck = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p><b>Did you use an anagram solver/word unscrambler at all during the experiment?</b></p>"+
+    "<p>You will not be penalised if you did, so please answer honestly.</br> We are interested in how difficult the anagrams are to solve.</p></span>",
+    choices: ["Yes", "No"],
+    on_finish: function(data) {
+      data.unscrambleCheck = data.response
+  }
+};
+
+timeline.push(unscrambleCheck)
+
+
+
+// slide asking if participants used a calculator
+
+var calcCheck = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p><b>Did you use a calculator at all during the experiment?</b></p>"+
+    "<p>You will not be penalised if you did, so please answer honestly.</br></br>",
+    choices: ["Yes", "No"],
+    on_finish: function(data) {
+      data.calcCheck = data.response
+  }
+};
+
+timeline.push(calcCheck)
+
+
+
+// finish screen 
+
+var finishScreen = {
+    type: 'html-button-response',
+    stimulus: function() {
+    return "<p>Congratulations, you have finished the experiment.</br>You have earned <b>£"+randomTrial.slice(-4)+"</b> in bonus pay.</p></br>"+
+    "<p>Your Prolific completion code is <b>"+compCode+"</b>. Please copy this code and paste it in Prolific to receive payment.</br>You will receive your bonus payment within 48 hours.</p>"+
+    "<p>Once copied, please press Finish to complete the experiment."
+    },
+    choices: ["Finish"],
+    on_finish: function(data) {
+        data.finalBonus = randomTrial.slice(-4)
+    }
+};
+
+timeline.push(finishScreen)
+
+
+
+
+
+/* start the experiment */
+function saveData(name, data){
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', 'save_data.php');
+              xhr.setRequestHeader('Content-Type','application/json');
+              xhr.send(JSON.stringify({filename: filename, filedata: data}));
+            };
+
+
+            //jsPsych.data.displayData('csv');
+            jsPsych.init({
+              timeline:timeline,
+              on_trial_finish: function(data){saveData(filename, jsPsych.data.get().csv())},
+              on_finish: function(data){saveData(filename, jsPsych.data.get().csv())}  // uncomment to locally save data file as csv
+            });
+
+
+
+
+
+           /* //jsPsych.data.displayData('csv');
+            jsPsych.init({
+              timeline:timeline,
+              on_trial_finish: function(data){saveData(filename, jsPsych.data.get().csv())},
+              on_finish: function(data){saveData(filename, jsPsych.data.get().csv())}  // uncomment to locally save data file as csv
+            });
+
+            */ 
+
+      </script>
+
+</html>

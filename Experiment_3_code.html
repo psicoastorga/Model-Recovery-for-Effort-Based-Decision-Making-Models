@@ -1,0 +1,2301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Anagram Task -- Time Based </title>
+    <!-- jspsych plugins -->
+    <script src="jspsych-6.3.1/jspsych.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-audio-keyboard-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-image-button-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-html-slider-response.js"></script>
+    <script src="jspsych-6.3.1/plugins/jspsych-survey-multi-choice.js"></script>
+    <!-- Fonts and CSS -->
+    <link href='https://fonts.googleapis.com/css?family=Bowlby One SC' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="jspsych-6.3.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+</head>
+<style>
+div.a {
+  font-size: 30px;
+}
+</style>
+<body>
+  <!-- Link to jquery and Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+  <script>
+
+  // Initialise some variables
+  let timeline = [];
+  let trialNumber = 0;
+  var PID = (Math.floor(Math.random() * 899999) + 100000).toString();
+  var filename = "numberProblem_TimeBased_" + PID;
+  var compCode = "5606F4B4" //fill in when setting up Prolific experiment
+
+  //Ensuring there is a PID column  
+  jsPsych.data.addProperties({
+        PID: PID,
+  });
+
+  //Prompt before refreshing window
+  window.onbeforeunload = function(){
+
+return "Are you sure you want to leave the experiment?";
+
+};
+
+
+// Demographic information 
+
+var prolificID = {
+   type: 'survey-text',
+   questions: [{prompt: "What is your Prolific ID?", placeholder: "12345", required: true}],
+ }
+
+ var onlineInPerson = {
+   type: 'survey-multi-choice',
+   questions: [{prompt: "Are you completing this experiment in the lab or online at home?", options: ["Lab", "Online"], required: true}],
+ };
+
+ var age = {
+    type: 'survey-text',
+    questions: [{prompt: "Please enter your age", placeholder: "e.g., 21", required: true}],
+  };
+
+  var gender = {
+    type: "survey-multi-choice",
+    questions: [{prompt: "Please indicate your gender", options: ["Female", "Male", "Non-Binary", "Other", "I prefer not to answer"], required: true}],
+  };
+
+  timeline.push(prolificID, age, gender);
+
+  var easyAnagrams = [
+        {
+            Difficulty: "Easy",
+            Scramble: "GEA",
+            Solution: "AGE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BGI",
+            Solution: "BIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UGB",
+            Solution: "BUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YDA",
+            Solution: "DAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GGE",
+            Solution: "EGG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "CEI",
+            Solution: "ICE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "JWA",
+            Solution: "JAW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YKE",
+            Solution: "KEY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GLO",
+            Solution: "LOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PMA",
+            Solution: "MAP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NDO",
+            Solution: "NOD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "APW",
+            Solution: "PAW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ESW",
+            Solution: "SEW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ONS",
+            Solution: "SON"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XAT",
+            Solution: "TAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TVE",
+            Solution: "VET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BWE",
+            Solution: "WEB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YSE",
+            Solution: "YES"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OZO",
+            Solution: "ZOO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XWA",
+            Solution: "WAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OET",
+            Solution: "TOE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "KYS",
+            Solution: "SKY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ETS",
+            Solution: "SET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XSI",
+            Solution: "SIX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ADS",
+            Solution: "SAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ORD",
+            Solution: "ROD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "POR",
+            Solution: "PRO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IGP",
+            Solution: "PIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NRA",
+            Solution: "RAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YPL",
+            Solution: "PLY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EGP",
+            Solution: "PEG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ODP",
+            Solution: "POD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TPE",
+            Solution: "PET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LOI",
+            Solution: "OIL"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DDO",
+            Solution: "ODD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UMD",
+            Solution: "MUD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EWN",
+            Solution: "NEW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XMA",
+            Solution: "MAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ALB",
+            Solution: "LAB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OJG",
+            Solution: "JOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ONI",
+            Solution: "ION"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "THU",
+            Solution: "HUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GHU",
+            Solution: "HUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EMH",
+            Solution: "HEM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RFY",
+            Solution: "FRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GOF",
+            Solution: "FOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IFT",
+            Solution: "FIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IHT",
+            Solution: "HIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ADT",
+            Solution: "TAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OKW",
+            Solution: "WOK"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ETJ",
+            Solution: "JET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GUD",
+            Solution: "DUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ESE",
+            Solution: "SEE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LYA",
+            Solution: "LAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OXB",
+            Solution: "BOX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AJB",
+            Solution: "JAB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LFY",
+            Solution: "FLY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EBE",
+            Solution: "BEE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "INW",
+            Solution: "WIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ANF",
+            Solution: "FAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EMT",
+            Solution: "MET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OGC",
+            Solution: "COG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UOY",
+            Solution: "YOU"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "INF",
+            Solution: "FIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TOU",
+            Solution: "OUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OWC",
+            Solution: "COW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XIM",
+            Solution: "MIX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IPZ",
+            Solution: "ZIP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MYG",
+            Solution: "GYM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "HWY",
+            Solution: "WHY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YUB",
+            Solution: "BUY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UMH",
+            Solution: "HUM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "VIY",
+            Solution: "IVY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BOM",
+            Solution: "MOB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LUF",
+            Solution: "FLU"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MEU",
+            Solution: "EMU"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UEH",
+            Solution: "HUE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ILD",
+            Solution: "LID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "URT",
+            Solution: "RUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IRD",
+            Solution: "RID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OBT",
+            Solution: "BOT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "FLE",
+            Solution: "ELF"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ADF",
+            Solution: "FAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OGH",
+            Solution: "HOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ENP",
+            Solution: "PEN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AGB",
+            Solution: "BAG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IRM",
+            Solution: "RIM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RIS",
+            Solution: "SIR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OWV",
+            Solution: "VOW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TWE",
+            Solution: "WET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RYT",
+            Solution: "TRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TWI",
+            Solution: "WIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GIW",
+            Solution: "WIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ORT",
+            Solution: "ROT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NSU",
+            Solution: "SUN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MUS",
+            Solution: "SUM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YSO",
+            Solution: "SOY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LSY",
+            Solution: "SLY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AST",
+            Solution: "SAT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UGR",
+            Solution: "RUG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YRA",
+            Solution: "RAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BUP",
+            Solution: "PUB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EIP",
+            Solution: "PIE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "APY",
+            Solution: "PAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DPA",
+            Solution: "PAD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "URO",
+            Solution: "OUR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LOD",
+            Solution: "OLD"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AKO",
+            Solution: "OAK"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XFI",
+            Solution: "FIX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ENM",
+            Solution: "MEN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NMA",
+            Solution: "MAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "WLO",
+            Solution: "LOW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RAJ",
+            Solution: "JAR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NIN",
+            Solution: "INN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OTH",
+            Solution: "HOT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "LLI",
+            Solution: "ILL"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "CIY",
+            Solution: "ICY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "BHU",
+            Solution: "HUB"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OHP",
+            Solution: "HOP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "REH",
+            Solution: "HER"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "IMH",
+            Solution: "HIM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DHI",
+            Solution: "HID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YHA",
+            Solution: "HAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YGU",
+            Solution: "GUY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "MHA",
+            Solution: "HAM"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NGI",
+            Solution: "GIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PAG",
+            Solution: "GAP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UFN",
+            Solution: "FUN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UFR",
+            Solution: "FUR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OXF",
+            Solution: "FOX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EFO",
+            Solution: "FOE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DFE",
+            Solution: "FED"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "XAF",
+            Solution: "FAX"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ARF",
+            Solution: "FAR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TAF",
+            Solution: "FAT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "VEE",
+            Solution: "EVE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OEG",
+            Solution: "EGO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DEY",
+            Solution: "DYE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ODU",
+            Solution: "DUO"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RDY",
+            Solution: "DRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EDU",
+            Solution: "DUE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PDI",
+            Solution: "DIP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DGI",
+            Solution: "DIG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UCT",
+            Solution: "CUT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "PCU",
+            Solution: "CUP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RCY",
+            Solution: "CRY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OYC",
+            Solution: "COY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TOC",
+            Solution: "COT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OCP",
+            Solution: "COP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NCO",
+            Solution: "CON"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "APC",
+            Solution: "CAP"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NCA",
+            Solution: "CAN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EYB",
+            Solution: "BYE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "UNB",
+            Solution: "BUN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "YBO",
+            Solution: "BOY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "TIB",
+            Solution: "BIT"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "OBG",
+            Solution: "BOG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "WBO",
+            Solution: "BOW"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "NIB",
+            Solution: "BIN"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DIB",
+            Solution: "BID"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ETB",
+            Solution: "BET"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "GEB",
+            Solution: "BEG"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AYB",
+            Solution: "BAY"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "DBE",
+            Solution: "BED"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "ARB",
+            Solution: "BAR"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "EAX",
+            Solution: "AXE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "AEW",
+            Solution: "AWE"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "SKA",
+            Solution: "ASK"
+        },
+        {
+            Difficulty: "Easy",
+            Scramble: "RIA",
+            Solution: "AIR"
+        }
+
+    ]
+
+    var mediumAnagrams = [
+        {
+            Difficulty: "Medium",
+            Scramble: "RIBHT",
+            Solution: "BIRTH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ALBEK",
+            Solution: "BLEAK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MECLA",
+            Solution: "CAMEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EHCKE",
+            Solution: "CHEEK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ARICH",
+            Solution: "CHAIR"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EOTMC",
+            Solution: "COMET"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "XETDO",
+            Solution: "DETOX"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RADTF",
+            Solution: "DRAFT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MUSRD",
+            Solution: "DRUMS"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CEJTE",
+            Solution: "EJECT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RYTEN",
+            Solution: "ENTRY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "BMEDE",
+            Solution: "EMBED"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HCITE",
+            Solution: "ETHIC"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CTAEX",
+            Solution: "EXACT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ETFCA",
+            Solution: "FACET"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "TAHIF",
+            Solution: "FAITH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NEGFI",
+            Solution: "FEIGN"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CETFH",
+            Solution: "FETCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LFEMA",
+            Solution: "FLAME"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ODFOL",
+            Solution: "FLOOD"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EHRSF",
+            Solution: "FRESH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KOGCE",
+            Solution: "GECKO"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NDGAL",
+            Solution: "GLAND"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ESOGO",
+            Solution: "GOOSE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ERAGC",
+            Solution: "GRACE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RUPGO",
+            Solution: "GROUP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "IABTH",
+            Solution: "HABIT"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ASHRH",
+            Solution: "HARSH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "DREHI",
+            Solution: "HIRED"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "SITHO",
+            Solution: "HOIST"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AERIT",
+            Solution: "IRATE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MEPLI",
+            Solution: "IMPEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NYRIO",
+            Solution: "IRONY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "SUEIS",
+            Solution: "ISSUE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LEJWE",
+            Solution: "JEWEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KEORJ",
+            Solution: "JOKER"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "GUDEJ",
+            Solution: "JUDGE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "IHKAK",
+            Solution: "KHAKI"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EFKNI",
+            Solution: "KNIFE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ELNEK",
+            Solution: "KNEEL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AKLAO",
+            Solution: "KOALA"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "OCNKK",
+            Solution: "KNOCK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "WONKN",
+            Solution: "KNOWN"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "YKAAK",
+            Solution: "KAYAK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ELDNA",
+            Solution: "LADEN"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HLACT",
+            Solution: "LATCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ETAHL",
+            Solution: "LATHE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AHUGL",
+            Solution: "LAUGH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ALHCE",
+            Solution: "LEACH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "DVIIL",
+            Solution: "LIVID"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "BOLYB",
+            Solution: "LOBBY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EVRLO",
+            Solution: "LOVER"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LSUTO",
+            Solution: "LOTUS"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RUNLA",
+            Solution: "LUNAR"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CYIRL",
+            Solution: "LYRIC"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "AAFMI",
+            Solution: "MAFIA"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MYRAR",
+            Solution: "MARRY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HTAMC",
+            Solution: "MATCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ETAMT",
+            Solution: "MATTE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RYMCE",
+            Solution: "MERCY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UQAKC",
+            Solution: "QUACK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LJYLE",
+            Solution: "JELLY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "EOKJS",
+            Solution: "JOKES"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KCHCE",
+            Solution: "CHECK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UIJEC",
+            Solution: "JUICE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "HIKCC",
+            Solution: "CHICK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "ZOERF",
+            Solution: "FROZE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UQLIL",
+            Solution: "QUILL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "XBONU",
+            Solution: "UNBOX"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RATKC",
+            Solution: "TRACK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MPLUC",
+            Solution: "CLUMP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "OVECI",
+            Solution: "VOICE"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "OWWID",
+            Solution: "WIDOW"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LMPCA",
+            Solution: "CLAMP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RUJRO",
+            Solution: "JUROR"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "UODNB",
+            Solution: "BOUND"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "RPAMC",
+            Solution: "CRAMP"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "STUJO",
+            Solution: "JOUST"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "CMIOR",
+            Solution: "MICRO"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LUWAF",
+            Solution: "AWFUL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NUCHL",
+            Solution: "LUNCH"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NKACS",
+            Solution: "SNACK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "SHADN",
+            Solution: "HANDS"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NADYC",
+            Solution: "CANDY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LHICL",
+            Solution: "CHILL"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "LENWY",
+            Solution: "NEWLY"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "MHYRE",
+            Solution: "RHYME"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "NHTAK",
+            Solution: "THANK"
+        },
+        {
+            Difficulty: "Medium",
+            Scramble: "KSCOS",
+            Solution: "SOCKS"
+        }
+    ]
+
+    var hardAnagrams = [
+        {
+            Difficulty: "Hard",
+            Scramble: "SEZEUEQ",
+            Solution: "SQUEEZE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "MUJDLEB",
+            Solution: "JUMBLED"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "JPYSAMA",
+            Solution: "PYJAMAS"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "KCMOMAH",
+            Solution: "HAMMOCK"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "CABKAPY",
+            Solution: "PAYBACK"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "MUKPNPI",
+            Solution: "PUMPKIN"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ETOQUUB",
+            Solution: "BOUQUET"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "EQONRUC",
+            Solution: "CONQUER"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "AYLLEQU",
+            Solution: "EQUALLY"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "UQSREVI",
+            Solution: "QUIVERS"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "QUATICA",
+            Solution: "AQUATIC"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "PIZILNE",
+            Solution: "ZIPLINE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "KCABGOL",
+            Solution: "BACKLOG"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "STUCIEJ",
+            Solution: "JUSTICE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "EWJLEER",
+            Solution: "JEWELER"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "CAAVCNY",
+            Solution: "VACANCY"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "RAWOENZ",
+            Solution: "WARZONE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "NGILYCC",
+            Solution: "CYCLING"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "IDECEXT",
+            Solution: "EXCITED"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "OONZRIH",
+            Solution: "HORIZON"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "YPAPUNH",
+            Solution: "UNHAPPY"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "PPEGABI",
+            Solution: "BAGPIPE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "TESRROE",
+            Solution: "RESTORE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "TENXOCT",
+            Solution: "CONTEXT"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "DESXOPE",
+            Solution: "EXPOSED"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "XIDETFA",
+            Solution: "FIXATED"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "MUSMRYA",
+            Solution: "SUMMARY"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ODXARAP",
+            Solution: "PARADOX"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "OMYPMTS",
+            Solution: "SYMPTOM"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "DABNONA",
+            Solution: "ABANDON"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "RDTAAPO",
+            Solution: "ADAPTOR"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ETNEBFI",
+            Solution: "BENEFIT"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "SHETMCI",
+            Solution: "CHEMIST"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "BICLEED",
+            Solution: "DECIBEL"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "MYONEOC",
+            Solution: "ECONOMY"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "RMERPOE",
+            Solution: "EMPORER"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "TCDIEAT",
+            Solution: "DICTATE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ORFECNE",
+            Solution: "ENFORCE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ITEREDU",
+            Solution: "ERUDITE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "INSAFHO",
+            Solution: "FASHION"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "EBFOODR",
+            Solution: "FORBODE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ERETSGU",
+            Solution: "GESTURE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "AMREGIC",
+            Solution: "GRIMACE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "NOYMOMH",
+            Solution: "HOMONYM"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "CIEPAMH",
+            Solution: "IMPEACH"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "DINSPII",
+            Solution: "INSIPID"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "EYJIROD",
+            Solution: "JOYRIDE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "EOKRKAA",
+            Solution: "KARAOKE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "SWATLIU",
+            Solution: "LAWSUIT"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ROLYPES",
+            Solution: "LEPROSY"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "UQERMAE",
+            Solution: "MARQUEE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "LEMOHTN",
+            Solution: "MENTHOL"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "DEUNMAN",
+            Solution: "MUNDANE"
+        },
+        {
+            Difficulty: "Hard",
+            Scramble: "ONAARPG",
+            Solution: "PARAGON"
+        }
+    ]
+
+  //
+    window.onbeforeunload = function(){
+
+    		return "Are you sure you want to leave the experiment?";
+
+        };
+    
+
+    //Creating 3 different groups 
+    var groupEasy = jsPsych.randomization.shuffle(easyAnagrams)
+    groupEasy = groupEasy.concat(jsPsych.randomization.shuffle(easyAnagrams))
+    var groupMed = jsPsych.randomization.shuffle(mediumAnagrams)
+    groupMed = groupMed.concat(jsPsych.randomization.shuffle(mediumAnagrams))
+    var groupHard = jsPsych.randomization.shuffle(hardAnagrams)
+    groupHard = groupHard.concat(jsPsych.randomization.shuffle(hardAnagrams))
+
+
+        
+ // Welcome message and instructions
+
+ var welcome = {
+   timeline: [
+     {
+     type: 'html-keyboard-response',
+     stimulus: "<span style='font-size: 22px;'> Welcome to the experiment.</br></br>"+
+      "In this experiment you will be solving numerous anagrams (we will explain further soon!).</br></br>"+
+      "Before we begin, could you please place your <b>phone out of sight</b> and close any other tabs you have open which may distract you.</br>"+
+      "In addition, please <b>do not open other tabs</b> while completing the experiment. This will be monitored.</br></br>"+
+      "<b>You will be quizzed on the following instructions, so it is best to read them carefully!</br></br></br></br></br></span>",
+     choices: jsPsych.NO_KEYS,
+     trial_duration: 5000
+     },
+     {
+     type: 'html-button-response',
+     stimulus: "<span style='font-size: 22px;'> Welcome to the experiment.</br></br>"+
+      "In this experiment you will be solving numerous anagrams (we will explain further soon!).</br></br>"+
+      "Before we begin, could you please place your <b>phone out of sight</b> and close any other tabs you have open which may distract you.</br>"+
+      "In addition, please <b>do not open other tabs</b> while completing the experiment. This will be monitored.</br></br>"+
+      "<b>You will be quizzed on the following instructions, so it is best to read them carefully!</br></br></br></br></span>",
+     choices: ['Start'],
+     }
+    ]
+ }
+
+ timeline.push(welcome);
+
+ //Introduction to the anagram task
+
+ var introProblems = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 80px;'><p><b>GANMAAR</b></p></span>"+
+        "<span style='font-size: 22px;'></br></br></br></br><p>The above is an example of an anagram.</p>"+
+        "<p>It is a word where all the letters have been jumbled up.</br> Your goal is to unscramble the letters and solve the full word (which coincidentally spells the word ANAGRAM above).</p>"+
+        "<p>There is only one solution to each anagram in this experiment and you must use all of the letters provided.</p>"+
+        "<p>None of the words/anagrams displayed will be acronyms or slang for other words.</p>"+
+        "<p>You will also need to type your answers in CAPITAL LETTERS. So it is best to turn your caps lock key on.</p>",
+    choices: ['Continue']
+    };
+
+    timeline.push(introProblems)
+
+
+var instructCheck = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p> To check you understand the basics of the task, the next page has a practice anagram.</p>"+
+    "<p>Don't stress if you can't figure it out, not all of the problems will be this difficult.</p>"+
+    "<p>Press Next to attempt the practice anagram.</p></span>",
+    choices: ["Next"],
+};
+
+timeline.push(instructCheck)
+
+var correctAnswerPrac = "PROLIFIC";
+
+
+var practiceProblems = {
+    type: 'survey-text',
+    preamble: "<span style='font-size: 80px;''><p><b>LIFOPICR</b></p></span>"+
+    "<span style='font-size: 22px;'></br></br></br></br><p>The above is a practice anagram.</p><p>Type below (in CAPITAL LETTERS) what you believe the correct answer is.</p>"+
+    "You will be given feedback after submitting your answer.</br></span>",
+    questions: [{prompt: "", placeholder: "", required: true}],
+    button_label: "Submit",
+    post_trial_gap: 500,
+    on_finish: function(data) {
+    AnswerPrac = JSON.stringify(data.response)
+    AnswerPrac2 = AnswerPrac.slice(6,)
+    AnswerPrac3 = AnswerPrac2.match(/"([^"]+)"/)
+    prevAnswerPrac = AnswerPrac3[1]
+    }
+};
+
+var trialFeedbackPractice = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(prevAnswerPrac == correctAnswerPrac) {
+            return "<b>Correct!</b></br></br>The solution was 'PROLIFIC'.</br></br>"
+        }
+            else {
+                return "<b>Wrong!</b></br></br>The correct solution was 'PROLIFIC'.</br></br>"
+            }
+    },
+    choices: ["Next"],
+};
+
+    timeline.push(practiceProblems, trialFeedbackPractice)
+
+var finalInstruct = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>In the experiment, anagrams will come in different sets:</p></span>"+
+        "<p style='font-size: 22px;color:red'><b>RED</b></p>"+
+        "<p style='font-size: 22px;color:blue'><b>BLUE</b></p>"+
+        "<p style='font-size: 22px;color:orange'><b>ORANGE</b></p>"+
+        "<span style='font-size: 22px;'><p>In the first phase of the experiment you will complete two, <b>three minute runs</b> of each coloured set.</br>That is, six runs in total (two of each coloured set).</p>"+
+        "<p>You will be told which set you are doing before each run as well as being reminded of the current set during the run.</p></span>",
+    choices: ["Next"],
+};
+
+var finalInstruct2 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>After answering an anagram you will receive feedback (i.e., 'correct' or 'wrong') and then a new anagram will be presented.</p>"+
+      "<p>There is no minimum number of anagrams you need to solve nor a percentage you need to get correct to complete the task.</p>"+
+      "<p>You will however need to <b>try</b> when solving the anagrams.</br><b>For example, do not just enter random letters for every single question.</p></span>",
+    choices: ["Next"],
+};
+
+var finalInstruct3 = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p>Some anagrams will be harder than others.</p>"+
+    "<p>If you can't figure out the answer to an anagram, take a guess and move on.</br>"+
+    "You won't be penalised for getting one wrong.</p></br>",
+    choices: ["Begin the Experiment"],
+};
+
+timeline.push(finalInstruct, finalInstruct2, finalInstruct3)
+
+ 
+
+ //Randomy shuffle colour names for groups
+
+ var colourShuffle = jsPsych.randomization.shuffle(["Red","Blue","Orange"])
+
+ jsPsych.data.addProperties({
+        colourOrder: colourShuffle,
+  });
+
+ // Randomly select a difficulty
+
+ var diff1 = ["EASY","MEDIUM","HARD"];
+     diff1 = jsPsych.randomization.shuffle(diff1);
+
+ var diff2 = ["EASY","MEDIUM","HARD"];
+     diff2 = jsPsych.randomization.shuffle(diff2);
+
+ var difficultySelectorArray = diff1.concat(diff2);
+
+ var diffCounter = 0
+
+ var difficultySelector = difficultySelectorArray[diffCounter]; 
+
+ 
+// premable with difficulty level
+
+var seqPreamble = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(difficultySelector == "EASY") {
+            return "<span style='font-size: 22px;'><p>The next run of number problems are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+" Set</b></p>"+
+             "<span style='font-size: 22px;'>Please answer the missing number in the box below each problem.</br></br>" 
+        }
+        else if(difficultySelector == "MEDIUM") {
+          return "<span style='font-size: 22px;'><p>The next run of number problems are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+" Set</b></p>"+
+             "<span style='font-size: 22px;'>Please answer the missing number in the box below each problem.</br></br>" 
+        }
+        else if(difficultySelector == "HARD") {
+          return "<span style='font-size: 22px;'><p>The next run of number problems are from the:</p></span>"+
+            "<p style='font-size: 32px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+" Set</b></p>"+
+             "<span style='font-size: 22px;'>Please answer the missing number in the box below each problem.</br></br>" 
+        } 
+    },
+    choices: ['Start']
+};
+
+
+
+//Counter for image/problem to display + correctAnswer variable
+var countEasy = 0
+var countMed = 0
+var countHard = 0
+var correctAnswer = null
+var prevAnswer = null
+
+// Setting up variables for timer
+var totalBlockTime = 0;
+var timeLimitReached = false
+
+//Time based Number problem block
+
+var timeBasedLoop = {
+type: 'survey-text',
+preamble: function() {
+        if(difficultySelector == "EASY") {
+            return "<p style='font-size: 40px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+" Set</b></p></br>"+
+            "<span style='font-size: 80px;'></br></br></br><p><b>" + groupEasy[countEasy].Scramble + "</b></p></br></br></br>"
+        }
+        else if(difficultySelector == "MEDIUM") {
+            return "<p style='font-size: 40px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+" Set</b></p></br>"+
+            "<span style='font-size: 80px;'></br></br></br><p><b>" + groupMed[countMed].Scramble + "</b></p></br></br></br>"
+        }
+        else if(difficultySelector == "HARD") {
+            return "<p style='font-size: 40px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+" Set</b></p></br>"+
+            "<span style='font-size: 80px;'></br></br></br><p><b>" + groupHard[countHard].Scramble + "</b></p></br></br></br>"        } 
+    }, 
+questions: [{prompt: "<b>Answer</b>", placeholder: "", required: true}],
+button_label: "Submit",
+post_trial_gap: 250,
+on_finish: function(data) {
+        if(difficultySelector == "EASY"){
+         correctAnswer = groupEasy[countEasy].Solution
+         data.problem = groupEasy[countEasy].Scramble
+         data.difficulty = "Easy"
+         data.setColour = colourShuffle[0]
+         countEasy = countEasy + 1
+         } else if (difficultySelector == "MEDIUM") {
+         correctAnswer = groupMed[countMed].Solution
+         data.problem = groupMed[countMed].Scramble
+         data.difficulty = "Medium"
+         data.setColour = colourShuffle[1]
+         countMed = countMed + 1
+         } else if (difficultySelector == "HARD") {
+         correctAnswer = groupHard[countHard].Solution
+         data.problem = groupHard[countHard].Scramble
+         data.difficulty = "Hard"
+         data.setColour = colourShuffle[2]
+         countHard = countHard + 1
+         }
+    Answer = JSON.stringify(data.response)
+    Answer2 = Answer.slice(6,)
+    Answer3 = Answer2.match(/"([^"]+)"/)
+    prevAnswer = Answer3[1]
+    blockTime = data.rt 
+    totalBlockTime = totalBlockTime + blockTime
+    data.answer = prevAnswer
+    data.correctAnswer = correctAnswer
+    if(totalBlockTime < 180000) {
+       timeLimitReached = false
+    } else if (totalBlockTime >= 180000) {
+       timeLimitReached = true
+    }
+    if(prevAnswer == correctAnswer) {
+             data.correct = true
+         } else {
+             data.correct = false
+         } 
+      }
+};
+
+//Feedback after each trial
+var trialFeedback = {
+    type: 'html-button-response',
+    stimulus: function() {
+        if(prevAnswer == correctAnswer) {
+            return "<span style='font-size: 30px;'><b>Correct!</b></br></br>"
+        }
+            else {
+                return "<span style='font-size: 30px;'><b>Wrong!</b></br></br>"
+            }
+    },
+    choices: ["Next"],
+    on_finish: function(data) {
+    }
+};
+
+
+
+//Screen to appear when block has timed out
+
+var finishBlock_screen = {
+        type: 'html-button-response',
+        timing_post_trial: 0,
+	    choices: ['Click here to continue'],
+        is_html: true,
+        stimulus: '<b>Congratulations</b></br>You have finished this 3 minute set.<p>',
+        on_finish: function(data) {
+        diffCounter = diffCounter + 1
+        difficultySelector = difficultySelectorArray[diffCounter]
+        totalBlockTime = 0
+        }
+    };
+
+//timeline push to display the finish block screen
+    var conditional_splash = {
+        timeline: [finishBlock_screen],
+        conditional_function: function(data) {
+			return timeLimitReached // skip if time has not been reached
+        }
+    };
+
+//Loop for the number sequence task.
+var loop_node = {
+    timeline: [timeBasedLoop, trialFeedback, conditional_splash],
+    loop_function: function(data) {
+        //var action = true;
+  return !timeLimitReached // stop looping if correct
+    }
+};
+
+timeline.push(seqPreamble, loop_node, seqPreamble, loop_node, seqPreamble, loop_node, seqPreamble, loop_node, seqPreamble, loop_node, seqPreamble, loop_node);
+
+
+
+//Instructions about the COG_ED task
+
+var cogED_Instruct = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>Congratulations on finishing the first phase.</br></br>"+
+    "In this next section, you will choose between two options.</br></br>"+
+    "You are choosing which coloured set you would prefer to solve anagrams from given the amount of money on offer.</br></br></span>",
+  choices: ['Next']
+};
+
+var setReminder = {
+  type: 'html-button-response',
+  stimulus: function() {
+      return "<span style='font-size: 22px;'><p> Remember that anagrams in the </span><span style='font-size: 22px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+" Set </b></span><span style='font-size: 22px;'> are <b>3 letters in length</b>."+
+             "<span style='font-size: 22px;'><p> Anagrams in the </span><span style='font-size: 22px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+" Set </b></span><span style='font-size: 22px;'> are <b>5 letters in length</b>."+
+             "<span style='font-size: 22px;'><p> Anagrams in the </span><span style='font-size: 22px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+" Set </b></span><span style='font-size: 22px;'> are <b>7 letters in length</b>."
+    },
+  choices: ['Next']
+};
+
+var cogED_Instruct2 = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>"+
+    "One of the choices you make will be chosen at random.</br> At the end you will do 3 minutes of your chosen set for the offered amount of money.</br></br>"+
+    "<b>Below is an example of what the choices might look like and what the choices mean.</b></br></br></span>",
+  choices: ["<span style='font-size: 24px;color:blue'><b>BLUE</b></span><span style='font-size: 24px;'> for <b>£1.00</b>", "<span style='font-size: 24px;color:red'><b>RED</b></span><span style='font-size: 24px;'> for <b>£2.00</b>"],
+  prompt: "<span style='font-size: 22px;'></br>Above, if you choose the left option, you would prefer to do a </span><span style='font-size: 22px; color:blue'><b> BLUE set </b></span><span style='font-size: 22px;'> of problems for 3 minutes, receiving £1.00 as a bonus.</span></br></br>"+
+    "<span style='font-size: 22px;'>If you choose the right option, you would prefer to do a </span><span style='font-size: 22px; color:red'><b> RED set </b></span><span style='font-size: 22px;'> of problems for 3 minutes, receiving £2.00 as a bonus.</span></br></br>"+
+    "<span style='font-size: 22px;'>Press either of the above buttons to continue (these are just examples, your choice won't be recorded).</span>"
+}
+
+var cogED_Instruct3 = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>There is no minimum percent correct or number of problems you need to solve in order to be paid.</br></br>"+
+    "We will however monitor your effort during the task to make sure you are at least trying.</br>(e.g., not entering random letters)</br></br>"+
+    "Press 'Next' to begin the task.</br></br></span>",
+  choices: ["Next"]
+};
+
+timeline.push(cogED_Instruct, setReminder, cogED_Instruct2, cogED_Instruct3);
+
+// Discounting task starting parameters
+  var choiceNumber = 1; //the trial number of choices
+  var leftMoney = 2; //starting value for easy
+  var rightMoney = 2; // starting value for harder option 
+  var additive = 1 // The amount added or substracted from the left option (first one is actually .5, check code for why)
+  var run = 0 // to determine which run of 1 v n we are up to. 
+  var titrateSide = 2 // just any number other than 0 or 1
+  var cogedArray = [];
+  var choice = null 
+  var leftColour = null
+  var rightColour = null
+  var leftDiff = null
+  var rightDiff = null
+
+
+// COG_ED Discounting task
+
+
+// Instructions prior to discount
+
+var discountInformation = {
+  type: 'html-button-response',
+  stimulus: function() {
+    if(run == 0) {
+      return "The next section of choices will be between a set of <span style='font-size: 24px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+"</b></span> problems and a set of <span style='font-size: 24px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+"</b></span> problems.</br></br>"+
+      "Remember, one of your choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money." 
+  } else if(run == 1) {
+    return "The next section of choices will be between a set of <span style='font-size: 24px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+"</b></span> problems and a set of <span style='font-size: 24px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+"</b></span> problems.</br></br>"+
+      "Remember, one of your choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money." 
+  } else if(run == 2) {
+    return "The next section of choices will be between a set of <span style='font-size: 24px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+"</b></span> problems and a set of <span style='font-size: 24px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+"</b></span> problems.</br></br>"+
+      "Remember, one of your choices will be selected at random.</br> You will be required to do a 3 minute run of the selected set for the offered amount of money." 
+  }
+},
+  choices: ['Start']
+};
+
+
+var discountTaskTrial = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'>Which set would you rather do for 3 minutes?</br></br>",
+  choices: function() {
+    if(run == 0) {
+    return ["<span style='font-size: 26px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+"</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+"</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(run == 1) {
+      return ["<span style='font-size: 26px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+"</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+"</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    } else if(run == 2){
+      return ["<span style='font-size: 26px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+"</b></span><span style='font-size: 24px;'> for <b>£" + leftMoney.toFixed(2) + "</span>", "<span style='font-size: 26px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+"</b></span><span style='font-size: 24px;'> for <b>£" + rightMoney.toFixed(2) + "</span>"];
+    }
+    },
+  prompt: "",
+  post_trial_gap: 500,
+  on_finish: function(data) {
+    if(run == 0) {
+      leftColour = colourShuffle[0];
+      rightColour = colourShuffle[1];
+      leftDiff= "Easy"
+      rightDiff = "Medium"
+      data.comparison = "Easy vs Medium"
+      data.colourPair = colourShuffle[0]+" vs "+colourShuffle[1];
+    } else if(run == 1) {
+      leftColour = colourShuffle[0];
+      rightColour = colourShuffle[2];
+      leftDiff= "Easy"
+      rightDiff = "Hard"
+      data.comparison = "Easy vs Hard"
+      data.colourPair = colourShuffle[0]+" vs "+colourShuffle[2];
+    } else if(run == 2) {
+      leftColour = colourShuffle[0];
+      rightColour = colourShuffle[1];
+      leftDiff= "Medium"
+      rightDiff = "Hard"
+      data.comparison = "Medium vs Hard"
+      data.colourPair = colourShuffle[1]+" vs "+colourShuffle[2];
+    }
+    if(data.response == 0 && choiceNumber == 1) {
+    titrateSide = 0
+    data.cogED_Choice = leftDiff+" for "+leftMoney.toFixed(2); 
+    choice = leftDiff+" for "+leftMoney.toFixed(2);
+    leftMoney = leftMoney - additive;
+    data.preference = leftDiff;
+    } else if(data.response == 1 && choiceNumber == 1){
+    titrateSide = 1
+    data.cogED_Choice = rightDiff + " for " + rightMoney.toFixed(2);
+    choice = rightDiff + " for " + rightMoney.toFixed(2);
+    rightMoney = rightMoney - additive;
+    data.preference = rightDiff;
+    } else if(data.response == 0 && titrateSide == 0){
+    data.cogED_Choice = leftDiff+" for "+leftMoney.toFixed(2);
+    choice = leftDiff+" for "+leftMoney.toFixed(2);
+    leftMoney = leftMoney - additive;
+    } else if(data.response ==  0 && titrateSide == 1){
+      data.cogED_Choice = leftDiff+" for "+leftMoney.toFixed(2);
+      choice = leftDiff+" for "+leftMoney.toFixed(2);
+      rightMoney = rightMoney + additive;
+    } else if(data.response == 1 && titrateSide == 0) {
+      data.cogED_Choice = rightDiff + " for " + rightMoney.toFixed(2);
+      choice = rightDiff + " for " + rightMoney.toFixed(2);
+      leftMoney = leftMoney + additive;
+    } else if (data.response == 1 && titrateSide == 1){
+      data.cogED_Choice = rightDiff + " for " + rightMoney.toFixed(2);
+      choice = rightDiff + " for " + rightMoney.toFixed(2);
+      rightMoney = rightMoney - additive;
+    }
+    data.choiceNumber = choiceNumber++ 
+    if(choiceNumber == 8 && titrateSide == 0) {
+      data.indifferencePoint = leftMoney
+      run = run + 1
+      choiceNumber = 1
+      additive = 2
+      leftMoney = 2
+      rightMoney = 2
+    } else if(choiceNumber == 8 && titrateSide == 1){
+      data.indifferencePoint = rightMoney
+      run = run + 1
+      choiceNumber = 1
+      additive = 2
+      leftMoney = 2
+      rightMoney = 2
+    }
+    additive = additive/2
+    cogedArray.push(choice)
+ }
+};
+
+var discountLoop = [discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial, discountTaskTrial]
+timeline = timeline.concat(discountInformation, discountLoop, discountInformation, discountLoop, discountInformation, discountLoop)
+
+
+//Select random trial, and participant performs task for 3 minutes
+
+var randomTrial = null
+
+var threeTrialFinish = {
+  type: 'html-button-response',
+  stimulus: function() {
+    randomTrial = jsPsych.randomization.sampleWithoutReplacement(cogedArray,1)[0];
+    if(randomTrial.slice(0,3) == 'Eas') {
+       difficultySelector = "EASY"
+       return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+"</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+"</b></span><span style='font-size: 24px;'> problems for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,3) == 'Med'){
+      difficultySelector = "MEDIUM"
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+"</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+"</b></span><span style='font-size: 24px;'> problems for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    } else if(randomTrial.slice(0,3) == 'Har') {
+      difficultySelector = "HARD"
+      return "<span style='font-size: 24px;'>The program has randomly selected one of your choices from before:</br></br>"+
+        "<span style='font-size: 24px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+"</b></span><span style='font-size: 24px;'> for <b>£"+randomTrial.slice(-4)+"</b></br></br>"+
+        "This means you will complete a set of <span style='font-size: 24px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+"</b></span><span style='font-size: 24px;'> problems for 3 minutes. Receiving £"+randomTrial.slice(-4)+" as a bonus.</br></br>";
+    };
+  },
+  choices: ['Next'],
+  on_finish: function(data) {
+    countEasy = 0
+    countMed = 0
+    countHard = 0
+  }
+};
+
+timeline.push(threeTrialFinish)
+
+timeline.push(seqPreamble, loop_node);
+
+// Trial for finishing final 3 minute run
+
+var preFinalQs = {
+  type: 'html-button-response',
+  stimulus: "<span style='font-size: 22px;'<p>Congratulations, you have finished the experiment.</p>"+
+    "<p>We just have a few short and simple questions to ask you before you are done.</p><b>Thank you!</b></br></br>",
+  choices: ['Next'],
+  }
+
+  timeline.push(preFinalQs)
+
+//Slide to check how difficult participants found the problems from each set. 
+
+var diffSliderEasy = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffle[0]+"'><b>"+colourShuffle[0]+" Set</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    prompt: "How hard did you find problems from the above set?</br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Easy",
+      data.sliderResponse = data.response
+    }
+  }
+
+timeline.push(diffSliderEasy)
+
+var diffSliderMedium = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffle[1]+"'><b>"+colourShuffle[1]+" Set</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    prompt: "How hard did you find problems from the above set?</br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Medium",
+      data.sliderResponse = data.response
+    }
+  }
+
+timeline.push(diffSliderMedium)
+
+var diffSliderHard = {
+    type: 'html-slider-response',
+    stimulus: function() {
+              return "<span style='font-size: 30px;color:"+colourShuffle[2]+"'><b>"+colourShuffle[2]+" Set</span></br></br>"
+        },
+    labels: ["<b>Easy!</b>", "<b>Medium</b>", "<b>Hard!</b>"],
+    button_label: "Submit",
+    require_movement: true,
+    prompt: "How hard did you find problems from the above set?</br></br>",
+    on_finish: function(data) {
+      data.difficulty = "Hard",
+      data.sliderResponse = data.response
+    }
+  }
+
+timeline.push(diffSliderHard)
+
+//Question asking participants how much they enjoy thinking.
+
+var enjoyThinkingQ = {
+  type: 'html-slider-response',
+  stimulus: "<span style='font-size: 24px;'>On a scale from 1 to 10, how much do you enjoy thinking?</br></br></span>",
+  labels: ["<b>1</b>", "<b>2</b>", "<b>3</b>", "<b>4</b>", "<b>5</b>", "<b>6</b>", "<b>7</b>", "<b>8</b>", "<b>9</b>", "<b>10</b>"],
+  step: 11,
+  slider_start: 1,
+  require_movement: true,
+  button_label: "Submit",
+  on_finish: function(data) {
+      data.thinkingResponse = data.response
+  }
+}
+
+timeline.push(enjoyThinkingQ);
+
+
+
+// slide asking if participants used a calculator
+
+var assistanceCheck = {
+    type: 'html-button-response',
+    stimulus: "<span style='font-size: 22px;'><p><b>Did you use an anagram solver/word unscrambler at all during the experiment?</b></p>"+
+    "<p>You will not be penalised if you did, so please answer honestly.</br> We are interested in how difficult the anagrams are to solve.</p></span>",
+    choices: ["Yes", "No"]
+};
+
+timeline.push(assistanceCheck)
+
+// finish screen 
+
+var finishScreen = {
+    type: 'html-button-response',
+    stimulus: function() {
+    return "<p>Congratulations, you have finished the experiment.</br>You have earned <b>£"+randomTrial.slice(-4)+"</b> in bonus pay.</p></br>"+
+    "<p>Your Prolific completion code is <b>"+compCode+"</b>. Please copy this code and paste it in Prolific to receive payment.</br>You will receive your bonus payment within 48 hours.</p>"+
+    "<p>Once copied, please press Finish to complete the experiment."
+    },
+    choices: ["Finish"],
+    on_finish: function(data) {
+        data.finalBonus = randomTrial.slice(-4)
+    }
+};
+
+timeline.push(finishScreen)
+
+
+/* start the experiment */
+function saveData(name, data){
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', 'save_data.php');
+              xhr.setRequestHeader('Content-Type','application/json');
+              xhr.send(JSON.stringify({filename: filename, filedata: data}));
+            };
+
+
+            //jsPsych.data.displayData('csv');
+            jsPsych.init({
+              timeline:timeline,
+              on_trial_finish: function(data){saveData(filename, jsPsych.data.get().csv())},
+              on_finish: function(data){saveData(filename, jsPsych.data.get().csv())}  // uncomment to locally save data file as csv
+            });
+
+      </script>
+
+</html>

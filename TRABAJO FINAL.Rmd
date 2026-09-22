@@ -1,0 +1,106 @@
+---
+title: "TRABAJO FINAL"
+author: "Carlos Astorga"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    dev: "cairo_pdf"
+date: "2026-09-18"
+---
+
+Trabajo final de la materia (fecha límite de entrega: 10 de octubre).
+
+Para aprobar la materia deberán entregar un pdf de Rmarkdown (al igual que los TPs). La consigna es ajustar y comparar al menos 2 modelos computacionales a un conjunto de datos de interés de ustedes (reales o simulados). 
+
+Deben:
+
+Describir el conjunto de datos empleado, mostrando las primeras filas de la tabla de datos y comentando qué significa cada variable. También deben mostrar algunos gráficos que representen lo que quieren ajustar (por ejemplo, proporción de elecciones correctas en una tarea de decisión). 
+Describir los modelos que van a implementar y por qué los eligieron. Qué hipótesis quieren evaluar al compararlos.
+Ajustar los modelos, mostrando el código. Pueden minimizar negative log-likelihood o hacer ajuste bayesiano, lo que prefieran.
+Graficar las predicciones del modelo en superposición a las predicciones de los datos empíricos para evaluar cualitativamente el ajuste de los modelos. 
+Comparar cuantitativamente los modelos con alguno de los criterios utilizados en clase
+Discutir cuál modelo es el que mejor ajusta a los datos, si es que hay uno que sea superior de acuerdo a los criterios que vimos en clases.
+Si tienen una hipótesis sobre el valor de algún parámetro, testearla.
+Se valorará positivamente que incluyan análisis de parameter y model recovery, pero no son obligatorios.
+
+Sobre el conjunto de datos a emplear. 
+
+La idea es que implementen modelos que sean de interés de ustedes. Pueden usar datos propios o ajenos o incluso datos ficticios simulados por ustedes, no hay problema. Comento igualmente algunos recursos para poder inspirarse:
+
+En la solapa de "Bienvenida" tienen un link a una base de datos de experimentos en psicología que puede ser muy útil porque hay de todo. Incluso pueden encontrar datos de pruebas clásicas empleadas en neuropsicología (ej.: BART, IGT, WCST, etc.) y datos de pacientes con algún diagnóstico (depresión, esquizofrenia, etc.).
+
+Para quienes tengan interés en temas más sociales, pueden consultar el libro de Paul Smaldino que aplica modelos computacionales a dinámicas sociales: Modeling Social Behavior: Mathematical and Agent-Based Models of Social Dynamics and Cultural Evolution. En la misma base de datos anterior hay datos de social decision-making.
+
+Para quienes tengan un interés en marketing, en la misma base anterior hay datos de "value-based decision-making" que muchas veces involucra datos de elección entre productos. Si ponen 'neuroeconomics' en esa base hay 3 o 4 conjuntos de datos de ese estilo.
+
+La tercera parte del libro de Lee y Wagenmakers que está subido a la bibliografía complementaria tiene varios ejemplos diversos que pueden usar. También hay algunos ejemplos en el libro de Farrell y Lewandowsky (bibliografía principal). 
+
+Para dudas y/o consultan escriban a nicocomay@gmail.com sin problemas.
+
+Muchos éxitos y gracias por compartir la materia con nosotros. 
+Gabi y Nico.
+
+#INTRODUCCION
+Voy a trabajar con la base de datos Exp1Data.csv extraida del articulo ¿Es todo esfuerzo mental igual? El papel del tipo de demanda cognitiva en la evitación del esfuerzo. (Is all mental effort equal? The role of cognitive demand-type on effort avoidance de Jake R. Embrey, Chris Donkin, Ben R. Newell, 2023, https://www.sciencedirect.com/science/article/pii/S0010027723000744)
+
+Modelos de descuento del esfuerzo
+estructura general
+
+$$SV=f(R,E;θ)$$
+
+donde:
+SV = valor subjetivo
+R = recompensa
+E = esfuerzo
+theta = parámetros individuales
+
+Después, si estás modelando elecciones binarias, normalmente se agrega una función Softmax:
+
+$$P(choice)=\frac{e^{βSVi}}{e^{βSVj}+e^{βSVi}}$$
+
+
+Por lo tanto, Softmax no es el modelo de descuento propiamente dicho. Es el mecanismo que transforma diferencias de valor subjetivo en probabilidades de elección.
+Esto está explícitamente implementado en trabajos de Klein-Flügge et al.
+
+
+#El modelo lineal
+La idea es que cada incremento de esfuerzo produce aproximadamente el mismo decremento en el valor.
+Klein-Flügge et al. compararon explícitamente el modelo lineal con modelos hiperbólicos y cuadráticos
+
+$$SV=R−kE$$
+
+Es decir: recompensa − costo lineal del esfuerzo.
+
+
+#Modelo parabólico/cuadrático
+
+
+$$SV=R−kE^2$$
+
+Otra posibilidad es una función de potencia donde γ es un parámetro adicional. 
+
+Białaszek, Marcowski y Ostaszewski, por ejemplo, compararon siete funciones de descuento y encontraron evidencia favorable a una función de potencia en sus datos
+
+$$SV=R−kE^γ$$
+Modelo hiperbólico 
+
+$$SV=\frac{R}{1+kE}$$
+Klein-Flügge et al. compararon funciones lineales, hiperbólicas, parabólicas y exponenciales y utilizaron Softmax + máxima verosimilitud para modelar las elecciones.
+
+#PLANTEO 
+Voy a comparar dos modelos 
+
+Modelo 1 — Linear effort discounting
+$$SV=R−kE$$
+Modelo 2 — Hyperbolic effort discounting
+$$SV=\frac{R}{1+kE}$$
+Para modelar las elecciones voy a usar 
+$$P(choice)=Softmax(βSV)$$
+
+
+comparar lineal vs. parabólico y preguntarnos si el costo de aumentar la demanda de memoria de trabajo es constante o se acelera.
+
+
+E = N-back es nuestra medida operacional de demanda/esfuerzo cognitivo
+R = cogED_Choice
+
