@@ -36,9 +36,7 @@ Se valorará positivamente que incluyan análisis de parameter y model recovery,
 
 #INTRODUCCION
 
-Se compararon dos modelos de descuento de esfuerzo, el modelo lineal y el cuadratico utilizando como base de datos "Exp1Data.csv" extraida del articulo "Is all mental effort equal? The role of cognitive demand-type on effort avoidance (Embrey, et al., 2023)"
-
-Un antecedente de esta comparación se reporto en Klein-Flügge et al y Białaszek, Marcowski y Ostaszewski.
+Se compararon dos modelos de descuento de esfuerzo, el modelo lineal y el cuadratico utilizando como base de datos "Exp1Data.csv" extraida del articulo "Is all mental effort equal? The role of cognitive demand-type on effort avoidance (Embrey, et al., 2023)".
 
 
 #Estructura general de los modelos de descuento del esfuerzo
@@ -50,7 +48,6 @@ R = recompensa
 E = esfuerzo
 theta = parámetros individuales
 
-Debido a que se modelo elecciones binarias se utilizo la función Softmax para transforma diferencias de valor subjetivo en probabilidades de elección. + máxima verosimilitud para modelar las elecciones.
 
 $$P(choice)=\frac{e^{βSVi}}{e^{βSVj}+e^{βSVi}}$$
 
@@ -75,384 +72,646 @@ Modelo 1 — Linear effort discounting
 $$SV=R−kE$$
 Modelo 2 — #Modelo cuadrático
 $$SV=R−kE^2$$
-Para modelar las elecciones voy a usar 
-$$P(choice)=Softmax(βSV)$$
-En la base de datos "Exp1Data.csv" se utilizo
-E = how_many_back, N-back es nuestra medida operacional de demanda/esfuerzo cognitivo 
-R = cogED_Choice
 
 #CARGA DE BASE DE DATOS 
 
 ```{r}
 datos <- read.csv("Exp1Data.csv")
-
-datos
 ```
 
-#PREPARACIÓN DE DATOS 
-
-```{r}
-summary(datos$cogED_Choice)
-summary(datos$how_many_back)
-
-#muestra la cantiad de datos ausentes por variable / columna
-colSums(is.na(datos))
-
-```
-
- how_many_back 3889
- cogED_Choice 20874
-
-
-```{r}
-# Inspeccionar variables candidatas en el dataset filtrado (datos_cogED)
-datos_cogED %>% 
-  select(comparison, preference, cogED_Choice, how_many_back) %>% 
-  head(10)
-```
-```{r}
-library(dplyr)
-
-# Rellenar valores de how_many_back hacia abajo antes de filtrar
-datos_procesados <- datos %>%
-  group_by(PID) %>%
-  tidyr::fill(how_many_back, .direction = "down") %>% # Copia el último N-back válido hacia las filas siguientes
-  ungroup() %>%
-  # Ahora filtramos las elecciones de cogED
-  filter(!is.na(cogED_Choice) & cogED_Choice != "")
-
-# Verificar si recuperamos los datos de N-back
-sum(is.na(datos_procesados$how_many_back))
-table(datos_procesados$how_many_back, useNA = "always")
-```
-
-```{r}
-# Ver qué columnas no tienen NAs en datos_cogED
-colnames(datos_cogED)[colSums(is.na(datos_cogED)) < nrow(datos_cogED)]
-```
-
-la columna comparison es justamente la que guarda la información sobre las condiciones de esfuerzo que se están enfrentando en la decisión de $cogED$.
-
-```{r}
-table(datos_cogED$comparison)
-```
-
-El número a la izquierda del " v " es el nivel de esfuerzo de la opción base ($E_{base}$).El número a la derecha del " v " es el nivel de esfuerzo de la opción de oferta ($E_{offer}$).
+Exploración de base de datos filtrando por el sujeto PID 136057 para explorar como es la dinámica del experimento y preparar la base previo al analisis
 
 ```{r}
 library(dplyr)
-library(tidyr)
-library(readr)
+datos_filtrados <- datos %>% filter(PID == 136057)
+str(datos_filtrados)
 
-# 1. Procesamiento y limpieza del dataframe
-datos_modelos <- datos_cogED %>%
-  # Filtrar filas vacías o con NA en cogED_Choice
-  filter(!is.na(cogED_Choice) & cogED_Choice != "") %>%
-  # Separar la columna 'comparison' ("0 v 1", "1 v 3", etc.)
-  separate(comparison, into = c("E_base", "E_offer"), sep = " v ", convert = TRUE) %>%
+``` 
+Se observan en cada sujeto 9 comparasiones (comparison) en donde para cada una hay 7 elecciones (cogED_Choice) a partir del cual se obtiene un punto de indiferencia (Indifference point) y una categoria de dificultad preferida, facil o dificil (Preference)
+
+```{r}
+
+
+library(stringr)
+
+# Seleccionar solamente las elecciones
+
+elecciones <- datos %>%
+  filter(!is.na(comparison)) %>%
   mutate(
-    participant = PID,
     
-    # parse_number() extrae automáticamente el valor numérico (ej. 2.00 de "1-back for 2.00")
-    R_offer = parse_number(cogED_Choice),
+    # Número de dificultad de cada opción
+    E_easy = as.numeric(str_extract(comparison, "^\\d+")),
+    E_hard = as.numeric(str_extract(comparison, "(?<=v )\\d+")),
     
-    # Recompensa fija de la opción base (usualmente 1.00 en la tarea cogED)
-    R_base = 1.00,
+    # Recompensas mostradas en cogED_Choice
+    reward = as.numeric(str_extract(cogED_Choice, "\\d+\\.\\d+")),
     
-    # Elección observada (1 = eligió Oferta, 0 = eligió Base)
-    choice = ifelse(preference == "offer" | button_pressed == 1, 1, 0)
-  ) %>%
-  # Conservar solo las columnas necesarias para los modelos
-  select(participant, E_base, E_offer, R_base, R_offer, choice) %>%
-  # Eliminar cualquier fila con NA residual
-  filter(!is.na(E_base) & !is.na(E_offer) & !is.na(R_offer) & !is.na(choice))
+    # Opción elegida
+    # 0 = izquierda / fácil
+    # 1 = derecha / difícil
+    choice = button_pressed
+  )
 
-# 2. Verificación de la estructura final
-cat("Cantidad de ensayos procesados correctamente:", nrow(datos_modelos), "\n")
-head(datos_modelos)
-```
-
-```{r}
-head(datos_modelos)
-```
+# Reconstruir la recompensa de cada opción
 
 
-#COMPARACIÓN 
+# Reconstruir las recompensas de las dos opciones
 
-####------ paso 1: funciones que computan el negloglik -------
-
-```{r}
-# ==============================================================================
-# MODELO 1 — Linear Effort Discounting: SV = R - k * E
-# ==============================================================================
-negll_effort_linear <- function(parameters, data) {
-  k    <- parameters[1]  # Tasa de descuento por esfuerzo
-  beta <- parameters[2]  # Sensibilidad/Inversa de temperatura (Softmax)
-  
-  # Restricciones de parámetros (k >= 0, beta > 0)
-  if (k < 0 | beta <= 0) { return(1e20) }
-  
-  # Asumiendo columnas en 'data':
-  # R_base, E_base (opción referencia, ej. 1-back)
-  # R_offer, E_offer (opción oferta/variable, ej. N-back)
-  # choice: 1 si eligió Oferta, 0 si eligió Referencia (o 1 y 2)
-  
-  SV_base  <- data$R_base - k * data$E_base
-  SV_offer <- data$R_offer - k * data$E_offer
-  
-  # Probabilidad de elegir la opción Oferta vía Softmax:
-  # P(Offer) = 1 / (1 + exp(-beta * (SV_offer - SV_base)))
-  p_offer <- 1 / (1 + exp(-beta * (SV_offer - SV_base)))
-  
-  # Evitar desbordamiento numérico log(0)
-  p_offer <- pmax(pmin(p_offer, 1 - 1e-15), 1e-15)
-  
-  # Log-likelihood acumulado
-  # Si choice == 1 eligió Oferta, si choice == 0 eligió Referencia
-  ll <- ifelse(data$choice == 1, log(p_offer), log(1 - p_offer))
-  
-  return(-sum(ll))
-}
-
-# ==============================================================================
-# MODELO 2 — Quadratic Effort Discounting: SV = R - k * E^2
-# ==============================================================================
-negll_effort_quadratic <- function(parameters, data) {
-  k    <- parameters[1]  # Tasa de descuento por esfuerzo cuadrático
-  beta <- parameters[2]  # Sensibilidad/Inversa de temperatura (Softmax)
-  
-  # Restricciones de parámetros (k >= 0, beta > 0)
-  if (k < 0 | beta <= 0) { return(1e20) }
-  
-  # Descuento cuadrático sobre el nivel N-back (E^2)
-  SV_base  <- data$R_base - k * (data$E_base^2)
-  SV_offer <- data$R_offer - k * (data$E_offer^2)
-  
-  # Probabilidad de elegir la opción Oferta vía Softmax:
-  p_offer <- 1 / (1 + exp(-beta * (SV_offer - SV_base)))
-  p_offer <- pmax(pmin(p_offer, 1 - 1e-15), 1e-15)
-  
-  ll <- ifelse(data$choice == 1, log(p_offer), log(1 - p_offer))
-  
-  return(-sum(ll))
-}
-```
-
-####----- paso 2: ajustar con optim (Multi-start) -----
-
-```{r}
-# Obtenemos la lista única de participantes presentes en la base de datos
-participants <- unique(data$participant)
-
-fit_linear <- data.frame()
-fit_quad   <- data.frame()
-
-for (i in participants) {
-  subjdata <- data[data$participant == i, ]
-  
-  # ============================================================================
-  # 1. MODELO LINEAL
-  # ============================================================================
-  # Valores iniciales: k ~ Unif(0, 1), beta ~ Unif(0.5, 15)
-  init_vec <- c(runif(1, 0, 1), runif(1, 0.5, 15))
-  estimate <- optim(init_vec, fn = negll_effort_linear, data = subjdata)
-  
-  # Bucle Multi-start para evitar mínimos locales
-  for (j in 1:5) {
-    init_vec <- c(runif(1, 0, 1), runif(1, 0.5, 15))
-    new_est  <- optim(init_vec, fn = negll_effort_linear, data = subjdata)
-    if (new_est$value < estimate$value) {
-      estimate <- new_est
-    }
-  }
-  
-  # Cálculo de métricas de ajuste (K = 2 parámetros)
-  nll_lin <- estimate$value
-  aic_lin <- 2 * 2 + 2 * nll_lin
-  bic_lin <- 2 * nll_lin + 2 * log(nrow(subjdata))
-  
-  fit_linear <- rbind(fit_linear, data.frame(
-    participant = i,
-    k           = estimate$par[1],
-    beta        = estimate$par[2],
-    loglik      = -nll_lin,
-    AIC         = aic_lin,
-    BIC         = bic_lin
-  ))
-  
-  # ============================================================================
-  # 2. MODELO CUADRÁTICO
-  # ============================================================================
-  init_vec <- c(runif(1, 0, 1), runif(1, 0.5, 15))
-  estimate <- optim(init_vec, fn = negll_effort_quadratic, data = subjdata)
-  
-  # Bucle Multi-start para evitar mínimos locales
-  for (j in 1:5) {
-    init_vec <- c(runif(1, 0, 1), runif(1, 0.5, 15))
-    new_est  <- optim(init_vec, fn = negll_effort_quadratic, data = subjdata)
-    if (new_est$value < estimate$value) {
-      estimate <- new_est
-    }
-  }
-  
-  # Cálculo de métricas de ajuste (K = 2 parámetros)
-  nll_quad <- estimate$value
-  aic_quad <- 2 * 2 + 2 * nll_quad
-  bic_quad <- 2 * nll_quad + 2 * log(nrow(subjdata))
-  
-  fit_quad <- rbind(fit_quad, data.frame(
-    participant = i,
-    k           = estimate$par[1],
-    beta        = estimate$par[2],
-    loglik      = -nll_quad,
-    AIC         = aic_quad,
-    BIC         = bic_quad
-  ))
-}
-```
-
-## Comparación de modelos
-Ya tenemos ajustados los dos modelos. Visualizemos qué tan bien predicen los datos. Para ello, simulamos
-datos con cada modelo utilizando los valores de los parámetros ajustados, que son los que más
-fielmente reproducen los datos.
-```{r}
-
-library(ggplot2)
-library(dplyr)
-library(patchwork)
-
-# ==============================================================================
-# PASO 1: Función para simular probabilidades/predicciones del modelo
-# ==============================================================================
-# Esta función calcula la probabilidad esperada P(Oferta) usando los parámetros estimados
-simular_predicciones <- function(data, fit_df, modelo = "lineal") {
-  data_sim <- data
-  data_sim$p_hat <- NA
-  
-  for (i in unique(data$participant)) {
-    # Extraer parámetros ajustados del sujeto i
-    pars <- fit_df %>% filter(participant == i)
-    k    <- pars$k
-    beta <- pars$beta
+elecciones <- elecciones %>%
+  group_by(PID, comparison) %>%
+  group_modify(~ {
     
-    idx <- which(data_sim$participant == i)
+    d <- .x
     
-    # Valores subjetivos según el modelo
-    if (modelo == "lineal") {
-      SV_base  <- data_sim$R_base[idx] - k * data_sim$E_base[idx]
-      SV_offer <- data_sim$R_offer[idx] - k * data_sim$E_offer[idx]
-    } else if (modelo == "cuadratico") {
-      SV_base  <- data_sim$R_base[idx] - k * (data_sim$E_base[idx]^2)
-      SV_offer <- data_sim$R_offer[idx] - k * (data_sim$E_offer[idx]^2)
-    }
+    leftMoney <- 2
+    rightMoney <- 2
+    additive <- 1
+    titrateSide <- 2
     
-    # Probabilidad predicha de elegir Oferta
-    data_sim$p_hat[idx] <- 1 / (1 + exp(-beta * (SV_offer - SV_base)))
-  }
-  
-  return(data_sim)
-}
-
-# Generamos los datasets con las predicciones
-sim_lin  <- simular_predicciones(data, fit_linear, modelo = "lineal")
-sim_quad <- simular_predicciones(data, fit_quad,   modelo = "cuadratico")
-
-
-# ==============================================================================
-# PASO 2: Resumir datos reales vs. predichos por variable X (ej. N-back o Trial)
-# ==============================================================================
-# Nota: Cambia 'E_offer' por la variable del eje X que quieras visualizar (ej. trial o nivel N-back)
-preparar_resumen <- function(sim_df) {
-  sim_df %>%
-    group_by(E_offer) %>% # o group_by(trial) si graficas por trial
-    summarise(
-      # Datos observados (Puntos y barras de error)
-      prop_real = mean(choice == 1, na.rm = TRUE),
-      se_real   = sd(choice == 1, na.rm = TRUE) / sqrt(n()),
+    d$R_left <- NA
+    d$R_right <- NA
+    
+    for(i in 1:nrow(d)){
       
-      # Datos predichos por el modelo (Banda sombreada)
-      prop_sim = mean(p_hat, na.rm = TRUE),
-      se_sim   = sd(p_hat, na.rm = TRUE) / sqrt(n()),
-      .groups  = "drop"
+      # Guardar las recompensas mostradas
+      d$R_left[i] <- leftMoney
+      d$R_right[i] <- rightMoney
+      
+      choice <- d$choice[i]
+      
+      if(i == 1){
+        
+        if(choice == 0){
+          titrateSide <- 0
+          leftMoney <- leftMoney - additive
+        }
+        
+        if(choice == 1){
+          titrateSide <- 1
+          rightMoney <- rightMoney - additive
+        }
+        
+      } else {
+        
+        if(titrateSide == 0){
+          
+          if(choice == 0){
+            leftMoney <- leftMoney - additive
+          }
+          
+          if(choice == 1){
+            leftMoney <- leftMoney + additive
+          }
+        }
+        
+        if(titrateSide == 1){
+          
+          if(choice == 0){
+            rightMoney <- rightMoney + additive
+          }
+          
+          if(choice == 1){
+            rightMoney <- rightMoney - additive
+          }
+        }
+      }
+      
+      additive <- additive / 2
+    }
+    
+    d
+  }) %>%
+  ungroup()
+
+
+# Pasar izquierda/derecha a fácil/difícil
+
+elecciones <- elecciones %>%
+  mutate(
+    R_easy = R_left,
+    R_hard = R_right
+  )
+
+
+# Crear la tabla para el modelo
+
+base_modelo <- elecciones %>%
+  select(
+    PID,
+    comparison,
+    choiceNumber,
+    E_easy,
+    E_hard,
+    R_easy,
+    R_hard,
+    choice,
+    indifferencePoint,
+    preference
+  )
+
+
+# Comprobar valores faltantes
+
+colSums(is.na(base_modelo))
+```
+
+
+#Ajustando los dos modelos a los datos empíricos
+Pasos:
+1. Definir una función que compute el negative log-likelihood para cada modelo.
+2. Ajustar cada modelo con optim().
+3. Guardar los parámetros optimizados y el valor obtenido de log-likelihood
+
+```{r}
+####------ paso 1: funciones que computan el negloglik -------
+negll_ML <- function(parameters, data){
+
+k <- parameters[1]      # costo del esfuerzo  
+beta <- parameters[2]   # sensibilidad a las diferencias de valor
+  
+# Restricciones de parámetros
+  if (k < 0 | beta <= 0) {
+    return(1e20)
+  }
+
+n <- nrow(data)
+ll <- rep(NA, n)
+  
+# Loop a lo largo de los trials
+  for (trial in 1:n) {
+    
+    # Valor subjetivo de cada opción
+    SV_easy <- data$R_easy[trial] - k * data$E_easy[trial]
+    SV_hard <- data$R_hard[trial] - k * data$E_hard[trial]
+    
+    # Softmax
+    p <- exp(beta * c(SV_easy, SV_hard))
+    p <- p / sum(p)
+    
+    # Elección del participante
+    choice <- data$choice[trial]
+    
+    # Log-likelihood
+    ll[trial] <- ifelse(
+      choice == 1,
+      log(p[1]),
+      log(p[2])
     )
+  }
+  
+  # Negative log-likelihood
+  negll <- -sum(ll)
+  
+  return(negll)
 }
+ 
 
-df_plot_lin  <- preparar_resumen(sim_lin)
-df_plot_quad <- preparar_resumen(sim_quad)
+negll_MC <- function(parameters, data){
 
+  k <- parameters[1]      # costo del esfuerzo  
+beta <- parameters[2]   # sensibilidad a las diferencias de valor
+  
+# Restricciones de parámetros
+  if (k < 0 | beta <= 0) {
+    return(1e20)
+  }
 
-# ==============================================================================
-# PASO 3: Función de graficado estilo publicación / diapositiva
-# ==============================================================================
-graficar_modelo <- function(df_plot, titulo, color_banda) {
-  ggplot(df_plot, aes(x = E_offer)) +
-    # 1. Banda sombreada de la predicción del modelo
-    geom_ribbon(aes(ymin = prop_sim - se_sim, ymax = prop_sim + se_sim),
-                fill = color_banda, alpha = 0.4) +
-    geom_line(aes(y = prop_sim), color = color_banda, size = 1) +
+n <- nrow(data)
+ll <- rep(NA, n)
+  
+# Loop a lo largo de los trials
+  for (trial in 1:n) {
     
-    # 2. Línea de azar (P = 0.5)
-    geom_hline(yintercept = 0.5, linetype = "dashed", color = "navy", size = 0.7) +
+    # Valor subjetivo de cada opción
+    SV_easy <- data$R_easy[trial] - k * data$E_easy[trial]^2
+    SV_hard <- data$R_hard[trial] - k * data$E_hard[trial]^2
     
-    # 3. Datos reales observados (Puntos con barras de error)
-    geom_errorbar(aes(ymin = prop_real - se_real, ymax = prop_real + se_real),
-                  width = 0.15, color = "black", size = 0.6) +
-    geom_point(aes(y = prop_real), color = "black", size = 3) +
+    # Softmax
+    p <- exp(beta * c(SV_easy, SV_hard))
+    p <- p / sum(p)
     
-    # Estética del gráfico
-    labs(
-      title = titulo,
-      x = "Demand / N-back",
-      y = "Prop. Elección Oferta"
-    ) +
-    scale_y_continuous(limits = c(0.3, 1.0), breaks = seq(0.4, 1.0, 0.2)) +
-    theme_classic(base_size = 14) +
-    theme(
-      plot.title   = element_text(hjust = 0.5, face = "bold", size = 18),
-      axis.title   = element_text(size = 14),
-      axis.text    = element_text(color = "black", size = 12)
+    # Elección del participante
+    choice <- data$choice[trial]
+    
+    # Log-likelihood
+    ll[trial] <- ifelse(
+      choice == 1,
+      log(p[1]),
+      log(p[2])
     )
+  }
+  
+  # Negative log-likelihood
+  negll <- -sum(ll)
+  
+  return(negll)
 }
+ 
 
+####----- paso 2: ajustar con optim -----
+####------ paso 2: ajustar los modelos con optim -------
 
-# ==============================================================================
-# PASO 4: Generar y combinar los gráficos
-# ==============================================================================
-p1 <- graficar_modelo(df_plot_lin,  "Modelo Lineal",     "#d87093") # Color violeta/rosa
-p2 <- graficar_modelo(df_plot_quad, "Modelo Cuadrático", "#e6ab02") # Color dorado/marrón
+n_subj <- unique(base_modelo$PID)
 
-# Mostrar lado a lado con patchwork
-p1 + p2
+fit_ML <- data.frame()
+fit_MC <- data.frame()
+
+for(i in n_subj){
+  
+  subjdata <- base_modelo[base_modelo$PID == i, ]
+  
+  #-------------------------
+  # MODELO LINEAL
+  #-------------------------
+  
+  init_vec <- c(
+    runif(1),         # k
+    runif(1, 0.5, 15) # beta
+  )
+  
+  estimate <- optim(
+    init_vec,
+    fn = negll_ML,
+    data = subjdata
+  )
+  
+  # Repetir con distintos valores iniciales
+  for(j in 1:5){
+    
+    init_vec <- c(
+      runif(1),         # k
+      runif(1, 0.5, 15) # beta
+    )
+    
+    new_est <- optim(
+      init_vec,
+      fn = negll_ML,
+      data = subjdata
+    )
+    
+    if(new_est$value < estimate$value){
+      estimate <- new_est
+    }
+  }
+  
+  # Guardar resultados
+  fit_ML <- rbind(
+    fit_ML,
+    data.frame(
+      PID = i,
+      k = estimate$par[1],
+      beta = estimate$par[2],
+      loglik = -estimate$value
+    )
+  )
+  
+  
+  #-------------------------
+  # MODELO CUADRÁTICO
+  #-------------------------
+  
+  init_vec <- c(
+    runif(1),         # k
+    runif(1, 0.5, 15) # beta
+  )
+  
+  estimate <- optim(
+    init_vec,
+    fn = negll_MC,
+    data = subjdata
+  )
+  
+  # Repetir con distintos valores iniciales
+  for(j in 1:5){
+    
+    init_vec <- c(
+      runif(1),         # k
+      runif(1, 0.5, 15) # beta
+    )
+    
+    new_est <- optim(
+      init_vec,
+      fn = negll_MC,
+      data = subjdata
+    )
+    
+    if(new_est$value < estimate$value){
+      estimate <- new_est
+    }
+  }
+  
+  # Guardar resultados
+  fit_MC <- rbind(
+    fit_MC,
+    data.frame(
+      PID = i,
+      k = estimate$par[1],
+      beta = estimate$par[2],
+      loglik = -estimate$value
+    )
+  )
+}
 ```
 
 
 #Comparación cuantitativa con Bayesian Information Criterion
+Como el modelo 2 es más flexible/complejo, sería injusta la comparación con el modelo 1 si usaramos el
+log-likelihood como métrica de comparación, dado que tiene mayor flexibilidad para poder ajustar los datos.
+Como vimos en clase, exiten métricas que penalizan esa complejidad.
+Vamos a usar el Bayesian Information Criterion: BIC = −2 log(lik) + k log(n).
 
 ```{r}
-####----- paso 3: comparación cuantitativa con BIC -----
+# Comparación cuantitativa con BIC
 
-# 1. Definir la cantidad de ensayos por participante
-# Asegúrate de ajustar esto según el número real de filas/trials por sujeto en tu dataset
-n_trials_per_subj <- nrow(data) / length(unique(data$participant))
+# Cantidad de parámetros
+k_ML <- 2   # k y beta
+k_MC <- 2   # k y beta
 
-# O si el número de trials varía por sujeto, puedes calcular el BIC individual en el loop anterior usando log(nrow(subjdata))
+# Cantidad de observaciones por participante
+n <- nrow(base_modelo)
 
-# Número de parámetros en cada modelo (k y beta para ambos)
-k_linear <- 2
-k_quad   <- 2
+# BIC para cada participante
+fit_ML$bic <- -2 * fit_ML$loglik + k_ML * log(n)
+fit_MC$bic <- -2 * fit_MC$loglik + k_MC * log(n)
 
-# 2. Calcular el BIC para cada participante en los dataframes ajustados
-fit_linear$bic <- -2 * fit_linear$loglik + k_linear * log(n_trials_per_subj)
-fit_quad$bic   <- -2 * fit_quad$loglik + k_quad * log(n_trials_per_subj)
-
-# 3. Crear el dataframe acumulado de comparación de modelos
+# Comparación de los modelos
 comp <- data.frame(
-  modelo = c('Linear Discounting', 'Quadratic Discounting'),
-  loglik = c(sum(fit_linear$loglik), sum(fit_quad$loglik)),
-  bic    = c(sum(fit_linear$bic),    sum(fit_quad$bic))
+  loglik = c(
+    sum(fit_ML$loglik),
+    sum(fit_MC$loglik)
+  ),
+  
+  bic = c(
+    sum(fit_ML$bic),
+    sum(fit_MC$bic)
+  ),
+  
+  modelo = c(
+    "Modelo lineal",
+    "Modelo cuadrático"
+  )
 )
 
-# 4. Mostrar la tabla formateada en Knitr / RMarkdown
-knitr::kable(comp, caption = "Comparación cuantitativa de los modelos de descuento de esfuerzo")
+knitr::kable(
+  comp,
+  caption = "Comparación cuantitativa de los modelos"
+)
+```
+
+Conclusión 
+De acuerdo a los valores de BIC se reporta que el modelo lineal cuenta con mejor ajuste con los datos. 
+
+#----------------------------------------------
+#Model recovery
+
+¿Cómo podemos estar seguros de que el diseño usado nos permite distinguir entre los modelos testeados?
+Para ello hay que hacer un análisis de recuperación de modelos, o model recovery.
+Como vimos en clase, implica:
+1. Simular datos con un modelo.
+2. Ajustar esos datos con todos los modelos.
+3. Comparar esos modelos con el criterio de comparación elegido (BIC en nuestro caso).
+4. Contar la proporción de veces que el modelo ganador es el que simuló los datos.
+5. Repetir simulando con todos los modelos.
+Un buen model recovery implica que cuando simulamos datos con un modelo, el mismo modelo es seleccionado
+como ganador la mayoría del tiempo.
+
+```{r}
+####--- paso 1: simulamos datos con los dos modelos ----
+
+
+### Funcion sim_data
+
+sim_data <- function(base_modelo, modelo, k, beta){
+  
+}
+
+sim_ML <- data.frame()
+sim_MC <- data.frame()
+
+for(i in 1:30){
+
+### sim Modelo lineal
+
+k <- runif(1)
+beta <- runif(1,0.5,15)
+
+temp <- sim_data(
+  base_modelo,
+  modelo = "lineal",
+  k = k,
+  beta = beta
+)
+
+temp$participante <- i
+
+# TIP: si cuando hacen model recovery guardan a su vez los parametros
+# generativos, tienen ya hecho el parameter recovery
+
+temp$true_k <- k
+temp$true_beta <- beta
+
+# guardo
+
+sim_ML <- rbind(sim_ML, temp)
+
+
+### sim Modelo cuadrático
+
+k <- runif(1)
+beta <- runif(1,0.5,15)
+
+temp <- sim_data(
+  base_modelo,
+  modelo = "cuadratico",
+  k = k,
+  beta = beta
+)
+
+temp$participante <- i+30
+
+temp$true_k <- k
+temp$true_beta <- beta
+
+sim_MC <- rbind(sim_MC, temp)
+}
+
+
+# junto datos
+
+sim_ML$true_model <- "Modelo lineal"
+
+sim_MC$true_model <- "Modelo cuadrático"
+
+sim_data <- rbind(sim_ML, sim_MC)
+
+
+####---- paso 2: ajustar los datos con los dos modelos -----
+
+fit_ML <- data.frame()
+fit_MC <- data.frame()
+
+for(i in 1:length(unique(sim_data$participante))){
+
+subjdata <- sim_data[
+  sim_data$participante==i,
+]
+
+
+### Modelo lineal
+
+init_vec <- c(
+  runif(1), # k
+  runif(1, 0.5, 15) # beta
+)
+
+estimate <- optim(
+  init_vec,
+  fn=negll_ML,
+  data=subjdata
+)
+
+for(j in 1:5){
+
+init_vec <- c(
+  runif(1), # k
+  runif(1, 0.5, 15) # beta
+)
+
+new_est <- optim(
+  init_vec,
+  fn=negll_ML,
+  data=subjdata
+)
+
+if(new_est$value < estimate$value){
+  estimate <- new_est
+}
+}
+
+
+# paso 3: guardar
+
+fit_ML <- rbind(
+  fit_ML,
+  data.frame(
+    k=estimate$par[1],
+    beta=estimate$par[2],
+    loglik=-estimate$value,
+    participant=i
+  )
+)
+
+
+### Modelo cuadrático
+
+init_vec <- c(
+  runif(1), # k
+  runif(1, 0.5, 15) # beta
+)
+
+estimate <- optim(
+  init_vec,
+  fn=negll_MC,
+  data=subjdata
+)
+
+for(j in 1:5){
+
+init_vec <- c(
+  runif(1), # k
+  runif(1, 0.5, 15) # beta
+)
+
+new_est <- optim(
+  init_vec,
+  fn=negll_MC,
+  data=subjdata
+)
+
+if(new_est$value < estimate$value){
+  estimate <- new_est
+}
+}
+
+
+fit_MC <- rbind(
+  fit_MC,
+  data.frame(
+    k=estimate$par[1],
+    beta=estimate$par[2],
+    loglik=-estimate$value,
+    participant=i
+  )
+)
+}
+
+
+####---- paso 3: comparar modelos ----
+
+# bic Modelo lineal
+
+fit_ML$bic <- -2*fit_ML$loglik +
+  2*log(63)
+
+
+# bic Modelo cuadrático
+
+fit_MC$bic <- -2*fit_MC$loglik +
+  2*log(63)
+
+
+# cual es el mejor?
+
+best <- ifelse(
+  fit_ML$bic < fit_MC$bic,
+  "Modelo lineal",
+  "Modelo cuadrático"
+)
+
+
+####---- paso 4: graficar matriz de model recovery -----
+
+model_rec <- data.frame(
+  part_sim=1:60,
+  true_model=c(
+    rep("Modelo lineal",30),
+    rep("Modelo cuadrático",30)
+  ),
+  best_model=best
+)
+
+recovery_prop <- prop.table(
+  table(
+    model_rec$true_model,
+    model_rec$best_model
+  ),
+  margin = 1
+)
+
+as.data.frame(recovery_prop) %>%
+ggplot(
+  aes(
+    x = Var2,
+    y = Var1,
+    fill = Freq
+  )
+) +
+geom_tile(show.legend=F) +
+geom_text(
+  aes(label=Freq),
+  size=10,
+  fontface='bold'
+) +
+labs(
+  x = "Modelo seleccionado",
+  y = "Modelo generativo",
+  fill = "Proporción"
+) +
+scale_fill_gradient(
+  low = "yellow",
+  high = "blue"
+) +
+theme_classic(base_size=14)
 ```
 
