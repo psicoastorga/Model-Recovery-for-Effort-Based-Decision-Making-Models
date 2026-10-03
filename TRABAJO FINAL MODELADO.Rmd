@@ -416,10 +416,7 @@ for(i in n_subj){
 
 
 #Comparación cuantitativa con Bayesian Information Criterion
-Como el modelo 2 es más flexible/complejo, sería injusta la comparación con el modelo 1 si usaramos el
-log-likelihood como métrica de comparación, dado que tiene mayor flexibilidad para poder ajustar los datos.
-Como vimos en clase, exiten métricas que penalizan esa complejidad.
-Vamos a usar el Bayesian Information Criterion: BIC = −2 log(lik) + k log(n).
+
 
 ```{r}
 # Comparación cuantitativa con BIC
@@ -477,73 +474,121 @@ Un buen model recovery implica que cuando simulamos datos con un modelo, el mism
 como ganador la mayoría del tiempo.
 
 ```{r}
-####--- paso 1: simulamos datos con los dos modelos ----
-
-
-### Funcion sim_data
-
-sim_data <- function(base_modelo, modelo, k, beta){
+####--- función para simular datos ----
+library(ggplot2)
+sim_data <- function(data, modelo, k, beta) {
   
+  # Copio las condiciones experimentales reales
+  sim <- data
+  
+  # Creo la variable de elección
+  sim$choice <- NA
+  
+  # Simulo cada elección
+  for(i in 1:nrow(sim)) {
+    
+    # Modelo lineal
+    if(modelo == "lineal") {
+      
+      SV_easy <- sim$R_easy[i] - k * sim$E_easy[i]
+      SV_hard <- sim$R_hard[i] - k * sim$E_hard[i]
+      
+    }
+    
+    # Modelo cuadrático
+    if(modelo == "cuadratico") {
+      
+      SV_easy <- sim$R_easy[i] - k * sim$E_easy[i]^2
+      SV_hard <- sim$R_hard[i] - k * sim$E_hard[i]^2
+      
+    }
+    
+    # Softmax
+    p <- exp(beta * c(SV_easy, SV_hard))
+    p <- p / sum(p)
+    
+    # Simulo la elección
+    # 0 = easy
+    # 1 = hard
+    
+    sim$choice[i] <- sample(
+      c(0, 1),
+      size = 1,
+      prob = p
+    )
+  }
+  
+  return(sim)
 }
+
+
+####--- paso 1: simulamos datos con los dos modelos ----
 
 sim_ML <- data.frame()
 sim_MC <- data.frame()
 
 for(i in 1:30){
-
-### sim Modelo lineal
-
-k <- runif(1)
-beta <- runif(1,0.5,15)
-
-temp <- sim_data(
-  base_modelo,
-  modelo = "lineal",
-  k = k,
-  beta = beta
-)
-
-temp$participante <- i
-
-# TIP: si cuando hacen model recovery guardan a su vez los parametros
-# generativos, tienen ya hecho el parameter recovery
-
-temp$true_k <- k
-temp$true_beta <- beta
-
-# guardo
-
-sim_ML <- rbind(sim_ML, temp)
-
-
-### sim Modelo cuadrático
-
-k <- runif(1)
-beta <- runif(1,0.5,15)
-
-temp <- sim_data(
-  base_modelo,
-  modelo = "cuadratico",
-  k = k,
-  beta = beta
-)
-
-temp$participante <- i+30
-
-temp$true_k <- k
-temp$true_beta <- beta
-
-sim_MC <- rbind(sim_MC, temp)
+  
+  ### sim Modelo lineal
+  
+  k <- runif(1)
+  beta <- runif(1, 0.5, 15)
+  
+  temp <- sim_data(
+    base_modelo,
+    modelo = "lineal",
+    k = k,
+    beta = beta
+  )
+  
+  temp$participante <- i
+  
+  # Guardamos los parámetros generativos
+  # para hacer también parameter recovery
+  
+  temp$true_k <- k
+  temp$true_beta <- beta
+  
+  # Guardo
+  
+  sim_ML <- rbind(sim_ML, temp)
+  
+  
+  ### sim Modelo cuadrático
+  
+  k <- runif(1)
+  beta <- runif(1, 0.5, 15)
+  
+  temp <- sim_data(
+    base_modelo,
+    modelo = "cuadratico",
+    k = k,
+    beta = beta
+  )
+  
+  temp$participante <- i + 30
+  
+  # Guardamos los parámetros generativos
+  
+  temp$true_k <- k
+  temp$true_beta <- beta
+  
+  # Guardo
+  
+  sim_MC <- rbind(sim_MC, temp)
 }
 
 
-# junto datos
+# Junto datos
 
 sim_ML$true_model <- "Modelo lineal"
 
 sim_MC$true_model <- "Modelo cuadrático"
 
-sim_data <- rbind(sim_ML, sim_MC)
+datos_simulados <- rbind(
+  sim_ML,
+  sim_MC
+)
 
 
 ####---- paso 2: ajustar los datos con los dos modelos -----
@@ -551,117 +596,117 @@ sim_data <- rbind(sim_ML, sim_MC)
 fit_ML <- data.frame()
 fit_MC <- data.frame()
 
-for(i in 1:length(unique(sim_data$participante))){
-
-subjdata <- sim_data[
-  sim_data$participante==i,
-]
-
-
-### Modelo lineal
-
-init_vec <- c(
-  runif(1), # k
-  runif(1, 0.5, 15) # beta
-)
-
-estimate <- optim(
-  init_vec,
-  fn=negll_ML,
-  data=subjdata
-)
-
-for(j in 1:5){
-
-init_vec <- c(
-  runif(1), # k
-  runif(1, 0.5, 15) # beta
-)
-
-new_est <- optim(
-  init_vec,
-  fn=negll_ML,
-  data=subjdata
-)
-
-if(new_est$value < estimate$value){
-  estimate <- new_est
-}
-}
-
-
-# paso 3: guardar
-
-fit_ML <- rbind(
-  fit_ML,
-  data.frame(
-    k=estimate$par[1],
-    beta=estimate$par[2],
-    loglik=-estimate$value,
-    participant=i
+for(i in 1:length(unique(datos_simulados$participante))){
+  
+  subjdata <- datos_simulados[
+    datos_simulados$participante == i,
+  ]
+  
+  
+  ### Modelo lineal
+  
+  init_vec <- c(
+    runif(1),          # k
+    runif(1, 0.5, 15) # beta
   )
-)
-
-
-### Modelo cuadrático
-
-init_vec <- c(
-  runif(1), # k
-  runif(1, 0.5, 15) # beta
-)
-
-estimate <- optim(
-  init_vec,
-  fn=negll_MC,
-  data=subjdata
-)
-
-for(j in 1:5){
-
-init_vec <- c(
-  runif(1), # k
-  runif(1, 0.5, 15) # beta
-)
-
-new_est <- optim(
-  init_vec,
-  fn=negll_MC,
-  data=subjdata
-)
-
-if(new_est$value < estimate$value){
-  estimate <- new_est
-}
-}
-
-
-fit_MC <- rbind(
-  fit_MC,
-  data.frame(
-    k=estimate$par[1],
-    beta=estimate$par[2],
-    loglik=-estimate$value,
-    participant=i
+  
+  estimate <- optim(
+    init_vec,
+    fn = negll_ML,
+    data = subjdata
   )
-)
+  
+  for(j in 1:5){
+    
+    init_vec <- c(
+      runif(1),          # k
+      runif(1, 0.5, 15) # beta
+    )
+    
+    new_est <- optim(
+      init_vec,
+      fn = negll_ML,
+      data = subjdata
+    )
+    
+    if(new_est$value < estimate$value){
+      estimate <- new_est
+    }
+  }
+  
+  
+  # Paso 3: guardar
+  
+  fit_ML <- rbind(
+    fit_ML,
+    data.frame(
+      k = estimate$par[1],
+      beta = estimate$par[2],
+      loglik = -estimate$value,
+      participant = i
+    )
+  )
+  
+  
+  ### Modelo cuadrático
+  
+  init_vec <- c(
+    runif(1),          # k
+    runif(1, 0.5, 15) # beta
+  )
+  
+  estimate <- optim(
+    init_vec,
+    fn = negll_MC,
+    data = subjdata
+  )
+  
+  for(j in 1:1){
+    
+    init_vec <- c(
+      runif(1),          # k
+      runif(1, 0.5, 15) # beta
+    )
+    
+    new_est <- optim(
+      init_vec,
+      fn = negll_MC,
+      data = subjdata
+    )
+    
+    if(new_est$value < estimate$value){
+      estimate <- new_est
+    }
+  }
+  
+  
+  fit_MC <- rbind(
+    fit_MC,
+    data.frame(
+      k = estimate$par[1],
+      beta = estimate$par[2],
+      loglik = -estimate$value,
+      participant = i
+    )
+  )
 }
 
 
 ####---- paso 3: comparar modelos ----
 
-# bic Modelo lineal
+# BIC Modelo lineal
 
-fit_ML$bic <- -2*fit_ML$loglik +
-  2*log(63)
-
-
-# bic Modelo cuadrático
-
-fit_MC$bic <- -2*fit_MC$loglik +
-  2*log(63)
+fit_ML$bic <- -2 * fit_ML$loglik +
+  2 * log(63)
 
 
-# cual es el mejor?
+# BIC Modelo cuadrático
+
+fit_MC$bic <- -2 * fit_MC$loglik +
+  2 * log(63)
+
+
+# ¿Cuál es el mejor?
 
 best <- ifelse(
   fit_ML$bic < fit_MC$bic,
@@ -673,12 +718,12 @@ best <- ifelse(
 ####---- paso 4: graficar matriz de model recovery -----
 
 model_rec <- data.frame(
-  part_sim=1:60,
-  true_model=c(
-    rep("Modelo lineal",30),
-    rep("Modelo cuadrático",30)
+  part_sim = 1:60,
+  true_model = c(
+    rep("Modelo lineal", 30),
+    rep("Modelo cuadrático", 30)
   ),
-  best_model=best
+  best_model = best
 )
 
 recovery_prop <- prop.table(
@@ -689,29 +734,30 @@ recovery_prop <- prop.table(
   margin = 1
 )
 
+
 as.data.frame(recovery_prop) %>%
-ggplot(
-  aes(
-    x = Var2,
-    y = Var1,
-    fill = Freq
-  )
-) +
-geom_tile(show.legend=F) +
-geom_text(
-  aes(label=Freq),
-  size=10,
-  fontface='bold'
-) +
-labs(
-  x = "Modelo seleccionado",
-  y = "Modelo generativo",
-  fill = "Proporción"
-) +
-scale_fill_gradient(
-  low = "yellow",
-  high = "blue"
-) +
-theme_classic(base_size=14)
+  ggplot(
+    aes(
+      x = Var2,
+      y = Var1,
+      fill = Freq
+    )
+  ) +
+  geom_tile(show.legend = FALSE) +
+  geom_text(
+    aes(label = round(Freq, 2)),
+    size = 10,
+    fontface = "bold"
+  ) +
+  labs(
+    x = "Modelo seleccionado",
+    y = "Modelo generativo",
+    fill = "Proporción"
+  ) +
+  scale_fill_gradient(
+    low = "yellow",
+    high = "blue"
+  ) +
+  theme_classic(base_size = 14)
 ```
 
