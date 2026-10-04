@@ -1,41 +1,18 @@
 ---
-title: "TRABAJO FINAL"
+title: "Model Recovery for Effort-Based Decision-Making Models"
 author: "Carlos Astorga"
 output: 
   pdf_document:
     latex_engine: xelatex
     dev: "cairo_pdf"
-date: "2026-09-18"
+date: "2026-10-4"
 ---
 
-Trabajo final
+#RESUMEN
+Se compararon dos modelos computacionales de descuento del esfuerzo —un modelo lineal (SV = R − kE) y uno cuadrático (SV = R − kE²)— utilizando los datos del experimento de Embrey et al. (2023). Ambos modelos fueron ajustados mediante máxima verosimilitud y comparados mediante el criterio de información bayesiano (BIC). El modelo lineal presentó el mejor ajuste, con un BIC de 3821,305, frente a 3836,981 para el modelo cuadrático. Además, se realizó un análisis de model recovery para evaluar la capacidad del diseño experimental para distinguir entre ambos modelos. En las simulaciones, el modelo lineal fue seleccionado como ganador en el 90% de los casos, tanto cuando los datos fueron generados por el modelo lineal como cuando fueron generados por el modelo cuadrático. Estos resultados indican que, aunque el modelo lineal obtuvo un mejor ajuste a los datos empíricos, el análisis de model recovery muestra que el diseño utilizado presenta dificultades para distinguir adecuadamente entre ambos modelos.
 
-Para aprobar la materia deberán entregar un pdf de Rmarkdown (al igual que los TPs). La consigna es ajustar y comparar al menos 2 modelos computacionales a un conjunto de datos de interés de ustedes (reales o simulados). 
-
-Deben:
-
-Describir el conjunto de datos empleado, mostrando las primeras filas de la tabla de datos y comentando qué significa cada variable. 
-
-También deben mostrar algunos gráficos que representen lo que quieren ajustar (por ejemplo, proporción de elecciones correctas en una tarea de decisión). 
-
-Describir los modelos que van a implementar y por qué los eligieron. Qué hipótesis quieren evaluar al compararlos.
-
-Ajustar los modelos, mostrando el código. Pueden minimizar negative log-likelihood o hacer ajuste bayesiano, lo que prefieran.
-
-Graficar las predicciones del modelo en superposición a las predicciones de los datos empíricos para evaluar cualitativamente el ajuste de los modelos. 
-
-Comparar cuantitativamente los modelos con alguno de los criterios utilizados en clase
-
-Discutir cuál modelo es el que mejor ajusta a los datos, si es que hay uno que sea superior de acuerdo a los criterios que vimos en clases.
-
-Si tienen una hipótesis sobre el valor de algún parámetro, testearla.
-
-Se valorará positivamente que incluyan análisis de parameter y model recovery, pero no son obligatorios.
-
-****nicocomay@gmail.com sin problemas.
 
 #INTRODUCCION
-
 Se compararon dos modelos de descuento de esfuerzo, el modelo lineal y el cuadratico utilizando como base de datos "Exp1Data.csv" extraida del articulo "Is all mental effort equal? The role of cognitive demand-type on effort avoidance (Embrey, et al., 2023)".
 
 
@@ -761,3 +738,4 @@ as.data.frame(recovery_prop) %>%
   theme_classic(base_size = 14)
 ```
 
+Se compararon dos modelos computacionales de descuento del esfuerzo —un modelo lineal (SV = R − kE) y uno cuadrático (SV = R − kE²)— utilizando los datos del experimento de Embrey et al. (2023). Ambos modelos fueron ajustados mediante máxima verosimilitud y comparados mediante el criterio de información bayesiano (BIC). El modelo lineal presentó el mejor ajuste, con un BIC de 3821,305, frente a 3836,981 para el modelo cuadrático. Además, se realizó un análisis de model recovery para evaluar la capacidad del diseño experimental para distinguir entre ambos modelos. En las simulaciones, el modelo lineal fue seleccionado como ganador en el 90% de los casos, tanto cuando los datos fueron generados por el modelo lineal como cuando fueron generados por el modelo cuadrático. Estos resultados indican que, aunque el modelo lineal obtuvo un mejor ajuste a los datos empíricos, el análisis de model recovery muestra que el diseño utilizado presenta dificultades para distinguir adecuadamente entre ambos modelos.
