@@ -4,11 +4,11 @@
 
 Este proyecto compara dos modelos computacionales de descuento del esfuerzo para analizar decisiones entre opciones que difieren en esfuerzo y recompensa.
 
-Se utilizaron los datos del experimento 1 de:
+Se utilizaron los datos del Experimento 1 de:
 
 > Embrey et al. (2023). *Is all mental effort equal? The role of cognitive demand-type on effort avoidance.*
 
-El objetivo fue evaluar si un modelo de descuento lineal o un modelo de descuento cuadrático describe mejor las decisiones observadas.
+El objetivo fue comparar un **modelo de descuento lineal** y un **modelo de descuento cuadrático**, evaluando cuál presenta un mejor ajuste a las decisiones observadas.
 
 ## Modelos
 
@@ -24,7 +24,7 @@ donde:
 
 - `R` = recompensa
 - `E` = esfuerzo
-- `k` = costo individual del esfuerzo
+- `k` = costo del esfuerzo
 
 ### Modelo cuadrático
 
@@ -34,64 +34,68 @@ $$
 SV = R - kE^2
 $$
 
-Ambos modelos incorporan un parámetro `β`, que representa la sensibilidad a las diferencias de valor, mediante una función de elección tipo softmax.
+Ambos modelos incorporan un parámetro `β`, que representa la sensibilidad a las diferencias de valor, mediante una función de elección tipo *softmax*.
 
 ## Datos
 
-Los datos corresponden al experimento 1 de Embrey et al. (2023).
+Los datos corresponden al Experimento 1 de Embrey et al. (2023).
 
-Cada participante realizó 9 comparaciones, con 7 elecciones en cada comparación. A partir de estas elecciones se reconstruyeron las recompensas y niveles de esfuerzo de las opciones fácil y difícil.
+En cada participante se identificaron 9 comparaciones, con 7 elecciones en cada comparación. A partir de estas elecciones se reconstruyeron las recompensas y los niveles de esfuerzo de las opciones fácil y difícil.
 
 Las principales variables utilizadas para el modelado fueron:
 
-- `PID`: identificador del participante.
-- `E_easy`: esfuerzo de la opción fácil.
-- `E_hard`: esfuerzo de la opción difícil.
-- `R_easy`: recompensa de la opción fácil.
-- `R_hard`: recompensa de la opción difícil.
-- `choice`: opción elegida.
+| Variable | Descripción |
+|---|---|
+| `PID` | Identificador del participante |
+| `E_easy` | Esfuerzo de la opción fácil |
+| `E_hard` | Esfuerzo de la opción difícil |
+| `R_easy` | Recompensa de la opción fácil |
+| `R_hard` | Recompensa de la opción difícil |
+| `choice` | Opción elegida |
 
 ## Ajuste de los modelos
 
 Los dos modelos fueron ajustados mediante **máxima verosimilitud**, minimizando la *negative log-likelihood* mediante `optim()` en R.
 
-Los modelos fueron comparados utilizando el **Bayesian Information Criterion (BIC)**.
+Posteriormente, los modelos fueron comparados mediante el **Bayesian Information Criterion (BIC)**.
 
 | Modelo | Log-likelihood | BIC |
 |---|---:|---:|
-| Lineal | -1606.191 | 3821.305 |
-| Cuadrático | -1614.029 | 3836.981 |
+| Modelo lineal | -1606.191 | 3821.305 |
+| Modelo cuadrático | -1614.029 | 3836.981 |
 
-El **modelo lineal presentó el menor BIC**, por lo que obtuvo el mejor ajuste según este criterio.
+El modelo lineal presentó el menor BIC y, por lo tanto, el mejor ajuste según este criterio.
 
 ## Model Recovery
 
-También se realizó un análisis de *model recovery* para evaluar si el diseño experimental permite distinguir adecuadamente entre los dos modelos.
+Se realizó además un análisis de *model recovery* para evaluar si el diseño experimental permite distinguir entre los dos modelos.
 
 El procedimiento consistió en:
 
-1. Simular datos utilizando el modelo lineal.
-2. Simular datos utilizando el modelo cuadrático.
+1. Simular datos a partir del modelo lineal.
+2. Simular datos a partir del modelo cuadrático.
 3. Ajustar ambos modelos a los datos simulados.
 4. Comparar los modelos mediante BIC.
 5. Evaluar qué modelo era seleccionado como ganador.
 
-Los resultados mostraron que el modelo lineal fue seleccionado en el **90% de las simulaciones**, tanto cuando los datos fueron generados por el modelo lineal como cuando fueron generados por el modelo cuadrático.
+Los resultados fueron:
 
-| Modelo generativo | Cuadrático seleccionado | Lineal seleccionado |
+| Modelo generativo | Modelo cuadrático seleccionado | Modelo lineal seleccionado |
 |---|---:|---:|
-| Lineal | 0.1 | 0.9 |
-| Cuadrático | 0.1 | 0.9 |
+| Modelo lineal | 0.1 | 0.9 |
+| Modelo cuadrático | 0.1 | 0.9 |
 
-Este resultado indica que el diseño experimental presenta **dificultades para distinguir entre los modelos**, ya que el modelo lineal tiende a ser seleccionado incluso cuando los datos son generados por el modelo cuadrático.
+El modelo lineal fue seleccionado en el **90% de las simulaciones**, tanto cuando los datos fueron generados por el modelo lineal como cuando fueron generados por el modelo cuadrático.
+
+Este resultado indica que el diseño experimental presenta dificultades para distinguir adecuadamente entre los dos modelos, ya que el modelo lineal tiende a ser seleccionado incluso cuando los datos fueron generados por el modelo cuadrático.
 
 ## Conclusión
 
-El modelo lineal presentó un mejor ajuste a los datos empíricos según el BIC. Sin embargo, el análisis de *model recovery* muestra que este resultado debe interpretarse con cautela, dado que el procedimiento de recuperación favoreció al modelo lineal incluso cuando los datos fueron generados por el modelo cuadrático.
+El modelo lineal presentó un mejor ajuste a los datos empíricos según el BIC. Sin embargo, los resultados del *model recovery* indican que este resultado debe interpretarse con cautela.
 
-Por lo tanto, los resultados permiten identificar al modelo lineal como el modelo con mejor ajuste según el criterio utilizado, pero también muestran una **limitación del diseño para discriminar entre las dos formas de descuento del esfuerzo**.
+El procedimiento de recuperación favoreció al modelo lineal incluso cuando los datos fueron generados por el modelo cuadrático. Por lo tanto, si bien el modelo lineal fue el modelo con mejor ajuste según el criterio utilizado, el diseño experimental presenta limitaciones para discriminar entre las dos formas de descuento del esfuerzo.
 
-## Tecnologías
+## Tecnologías y métodos
 
 - R
 - Máxima verosimilitud
@@ -100,11 +104,13 @@ Por lo tanto, los resultados permiten identificar al modelo lineal como el model
 - Model recovery
 - Modelado computacional de decisiones
 
-## Estructura del repositorio
+## Estructura del proyecto
 
 ```text
-.
-├── TRABAJO-FINAL-MODELADO.Rmd
-├── TRABAJO-FINAL-MODELADO.pdf
-├── Exp1Data.csv
-└── README.md
+effort-based-decision-models/
+│
+├── README.md
+├── data/
+│   └── Exp1Data.csv
+├── effort_model_comparison.Rmd
+└── effort_model_comparison.pdf
